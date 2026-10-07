@@ -146,3 +146,18 @@ def pi_da_linha(etapa: str, documento: str, m: dict) -> str | None:
     if ne:
         return m["ne_pi"].get(ne.group(0)) or m["ne_pi_ug"].get((ne.group(1), ne.group(2)))
     return None
+
+
+import os
+from datetime import datetime
+
+def agora_iso() -> str:
+    """Retorna a data e hora atual no formato ISO padrão."""
+    return datetime.utcnow().isoformat() + "Z"
+
+def garantir_pastas(caminho) -> str:
+    """Garante que a pasta de destino exista no servidor."""
+    import os
+    if not os.path.exists(caminho):
+        os.makedirs(caminho, exist_ok=True)
+    return str(caminho)
