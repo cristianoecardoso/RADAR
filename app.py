@@ -16,7 +16,10 @@ import threading
 import webbrowser
 
 from radar_backend import create_app
-from radar_backend.radar_config import BASE_DIR, DADOS_DIR
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent
+DADOS_DIR = BASE_DIR / "dados"
+
 from radar_backend.radar_util import escrever_log, localizar_html
 
 app = create_app()
