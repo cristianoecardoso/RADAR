@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from flask import Flask, jsonify, request
 
-from radar_backend.radar_util import agora_iso, garantir_pastas
+from radar_backend.pi_util import agora_iso, garantir_pastas
 
 
 def create_app() -> Flask:
