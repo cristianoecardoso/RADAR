@@ -1,0 +1,718 @@
+RADAR FNAC — PAINEL LOCAL DE ACOMPANHAMENTO
+============================================
+
+Painel local (roda só no seu computador) para acompanhar os instrumentos do FNAC
+(UG 110591): Termos de Compromisso, TEDs, convênios e contratos, cruzando
+
+  - documentos SEI (PDFs lidos e guardados no banco)
+  - Transferegov gov: módulo TED (API TED) e módulo Discricionárias e Legais
+    (transferências voluntárias e obrigatórias)
+  - DINV / Plano Estratégico
+
+Tudo o que é dado de instrumento fica em dados/INSTRUMENTOS/Instrumentos.db; os arquivos originais dos documentos SEI ficam
+em dados/INSTRUMENTOS/SEI.db e as fotos em dados/INSTRUMENTOS/fotos.db (desde 01/10/2026 — ver item SEI.db e FOTOS no fim).
+
+
+1. INSTALAÇÃO (uma vez)
+----------------------
+  python3 -m pip install -r requirements.txt
+
+
+2. EXECUÇÃO
+-----------
+  python3 app.py
+  abra http://127.0.0.1:5050/
+
+  O backend só responde em 127.0.0.1 (apenas esta máquina). Ctrl+C encerra.
+  O log do backend fica em dados/radar_backend.log.
+
+
+3. ONDE FICAM OS DADOS
+----------------------
+  dados/INSTRUMENTOS/Instrumentos.db   base dos instrumentos (SEI + Transferegov gov + DINV inicial)
+  dados/INSTRUMENTOS/SEI.db            arquivo original (PDF/Excel) de cada documento SEI (tabela arquivos_pdf)
+  dados/INSTRUMENTOS/fotos.db          fotos extraídas dos documentos adicionados, por instrumento
+  dados/INSTRUMENTOS/anexos_excel/     anexos Excel de documentos SEI (mantenha esta pasta)
+  dados/APITED/                        pasta de trabalho da coleta da API TED (botão GovTED)
+  dados/APITC/                         pasta de trabalho da coleta do módulo Discricionárias e Legais (botão GovTC)
+  dados/DINV/                          atualização do DINV (planilha baixada e dinv.db); NÃO entra sozinha no Instrumentos.db
+  dados/tg/                            planilha do Tesouro Gerencial (aba Orçamento)
+
+  Os PDFs do SEI não ficam mais em pasta: o conteúdo original de cada um está no
+  SEI.db (tabela arquivos_pdf). Para incluir um documento novo, use o botão Adicionar Documento (tela SEI) ou o item 7.
+
+  Outra pasta de dados: defina  export RADAR_DADOS_DIR="/caminho"  antes de rodar app.py.
+
+
+4. O QUE HÁ DENTRO DO Instrumentos.db
+-------------------------------------
+  Instrumentos e SEI
+    instrumentos              1 linha por processo SEI (tipo, vigência mais futura, prazo de execução,
+                              nº de aditivos e total de aditivos, situação, valores...)
+    instrumento_vigencias     cadeia de vigências: instrumento original e cada aditivo
+    subdivisoes               localidades de cada instrumento
+    documentos, paginas, tabelas, assinaturas, busca   texto, tabelas e assinaturas dos documentos
+    arquivos_pdf, cache_pdf   PDF original e texto/OCR extraído de cada documento
+    documentos_vinculados     documentos ligados a um instrumento (aditivos novos, por exemplo)
+    cadastro, cadastro_documentos, cadastro_colunas, pf_processo, planilha, xlsx_*
+                              cópia integral da antiga planilha Processos.xlsx (que não é mais lida)
+    pt_cronograma_docs        por documento de Plano de Trabalho: data da versão e se os totais conferem
+    pt_cronograma_fisico      metas e etapas lidas do PT (descrição, unidade, quantidade, valor, prazo, página)
+    pt_cronograma_desembolso  cronograma de desembolso lido do PT (repasse/contrapartida por mês e ano, ou parcelas)
+                              (só entram nas telas as versões cuja soma confere com o total do próprio documento)
+    contrapartida_fontes      todas as fontes de contrapartida de cada instrumento (planilha 2027, documentos,
+                              cronograma de desembolso do PT, GOV TC) e qual foi adotada; instrumentos.contrapartida
+                              e contrapartida_origem trazem o valor adotado (planilha 2027 prevalece; sem ela, a fonte mais recente)
+                              Validação do desembolso do PT: repasse + contrapartida = total geral do documento.
+    instrumentos_externos     instrumentos que estão no DINV/Transferegov mas não no Cadastro
+    instrumentos_transferegov cada instrumento está (SIM/NÃO) cadastrado no Transferegov
+    dinv_desconsiderados      registros do DINV descartados por decisão sua
+    fonte_campo               FONTE de cada campo preenchido (arquivo, tabela, chave, campo, página,
+                              critério, data). Consulta: SELECT * FROM fonte_campo WHERE tabela='instrumentos' AND chave='<processo>'
+    decisoes_usuario          TODAS as decisões/correções/regras do usuário (valor adotado, motivo, onde se
+                              aplica no código) — refeita a cada reconstrução (scripts/registrar_decisoes.py)
+    livro_financeiro          livro de movimentos de cada TC/Convênio (EMPENHO/DESEMBOLSO/PAGAMENTO): cada
+                              documento como Entrada/Saída, considerado ou não e por quê, fonte
+    tg_execucao_join          cruzamento de instrumentos x Tesouro Gerencial (dados/tg/) e API
+                              TransfereGov já coletada: 1 linha por evento (NE/OB/NC/PF/TRF/PI),
+                              com etapa (EMPENHO, PAGAMENTO, CREDITO, EXECUCAO_TG_AGREGADA, PF,
+                              PF_TG, TRF...), documento, valor, arquivo/método de origem. Gerada por
+                              scripts/criar_tg_execucao_join.py (ver item 8). NÃO existe etapa
+                              LIQUIDACAO: os arquivos de RO do Tesouro Gerencial misturam ajuste de
+                              empenho (inclusão/reforço/anulação) e baixa de RP com liquidação de
+                              verdade, sem dar pra separar com confiança — ver o cabeçalho do script.
+    tg_execucao_historico     tudo o que já passou pelo tg_execucao_join (a base do TG é só ATUALIZAÇÃO: documento
+                              que sumir dos arquivos novos volta como "[preservado de base TG anterior]")
+    tg_pf_documento           TODAS as linhas de PF do FNAC (UG 110591) dos dados/tg/radar_pf_*.csv, 2016-2026, com
+                              ação, evento, fonte, inscrição (nº SIAFI do TED ou vazio), valor (devolução/estorno
+                              negativo) e arquivo. Incremental (só acrescenta). A etapa PF_TG leva as que casam com
+                              um instrumento (inscrição = numero_siafi, inclusive os códigos 1AAxxx dos TEDs de 2020).
+    tg_arquivos, tg_arquivos_conteudo   CÓPIA dos arquivos de dados/tg/ dentro do banco (zlib, 1 por conteúdo; todas as versões já
+                              vistas, inclusive backups/tg_*). O banco é AUTOSSUFICIENTE: se dados/tg/ for apagada (ou ficar vazia), o
+                              criar_tg_execucao_join.py e a aba Orçamento a recriam sozinhos com a última versão vista de cada arquivo
+                              (radar_backend/tg_arquivos.py: guardar/restaurar). Testado em 25/09/2026: sem dados/tg, mesmos números.
+                              Estas tabelas, tg_pf_*, ted_documentos_sei e tg_*_historico sobrevivem ao criar_base_completa.py.
+    tg_pf_observacao          "Doc - Observação" de cada PF do FNAC (radar_docs_geral*.xlsx, PFs 2019-2026): processos e documentos
+                              SEI citados. Incremental.
+    ted_documentos_sei        relação TED (nº SIAFI da inscrição da PF) -> processo do instrumento (se cadastrado) -> documento SEI
+                              citado na observação da PF (ofícios/despachos de autorização do repasse). Refeita a cada join.
+    PF de TED — regra (25/09/2026): as fontes são SEMPRE COMPLEMENTARES — Módulo TED, telas/planilha/RCO/
+                              documentos (siafi_pf_liberadas) e Tesouro Gerencial entram todas, sem duplicar: o
+                              MESMO documento (nº da PF do FNAC) conta uma vez (prioridade nessa ordem; valor
+                              diferente aparece no botão "⚠ TRF x PF"). Total agregado ("Repasses AAAA", "PF não
+                              identificadas no Módulo TED") é trocado pelo detalhe PF a PF do TG do mesmo período.
+                              Pares de mesmo valor com números diferentes NÃO são duplicidade. PF do TG sem TRF no
+                              Módulo TED entra também na TRF do TED (radar_backend/tc_gantt_empenho.pfs_complementares).
+                              Exceção: Dourados (692230) — para a mesma PF vale o valor do TG (PF_TG_PREVALECE).
+                              O export não traz data: vale a data da tela do SIAFI, senão é ESTIMADA pela numeração
+                              da PF no ano, dentro do período do arquivo (marcada na fonte).
+  Transferegov (dados do gov)
+    transferegov_ted_*        API TED (plano de ação, metas, etapas, programação financeira, TRF, notas...)
+    transferegov_siconv_*     Discricionárias e Legais (convênio, aditivos, empenho, desembolso, pagamento, metas...)
+    transferegov_progresso_*  ajustes manuais de PF feitos no painel (vínculo PF x meta, alocações...)
+    transferegov_execucoes    uma linha por atualização (data, fonte, totais)
+    transferegov_alteracoes   o que mudou em cada atualização, por instrumento: novo / alterado / removido,
+                              campo, valor anterior e valor novo, com a data da execução
+    (cada linha das tabelas do gov tem _incluido_em, _atualizado_em e _execucao_id)
+  DINV
+    dinv_*                    base inicial do DINV (o botão DINV não altera estas tabelas)
+
+
+5. TELAS (Execução Física)
+--------------------------
+  INSTRUMENTOS  (à esquerda de "Base de Dados")
+     Lista de Instrumentos, lista de Processos SEI e Detalhe, lidos só do Instrumentos.db.
+     Tipo: TODOS / TC / TED / CONTRATO / CONVÊNIO / OUTROS (filtra as duas listas).
+     Filtro avançado: Vigentes | Encerrados | Vigência vencida (sem encerramento registrado) |
+                      Com vigência a encerrar até mês/ano.
+     No detalhe aparecem os botões:
+       Cronograma / Metas e Etapas  mostram SEMPRE a versão mais atualizada, seja do GOV ou do Plano de
+                                    Trabalho do SEI (a fonte e a data aparecem abaixo do botão e no popup).
+                                    Regra: a data do GOV é a do último ato (TED: assinatura/efetivação do termo
+                                    ou último parecer; TC/convênio: último termo aditivo ou assinatura do
+                                    convênio). O PT do SEI só vence se a data de assinatura for MAIOR; empate
+                                    ou falta de data no GOV mantém o GOV.
+       Documentos (PDF)             (modo LISTAGEM, ao lado do Físico-Financeiro) lista de seleção com os PDFs do instrumento
+                                    guardados no banco (arquivos_pdf), com nomes sintéticos: "TC/TED/Convênio/Contrato Inicial",
+                                    "Aditivo N" (duas versões do mesmo nº: "Aditivo N (minuta)"), "Plano de Trabalho Inicial / dd/mm/aaaa /
+                                    Atual", "RCO" (Relatório de Cumprimento do Objeto), "RCO Parcial", "Gestor/Fiscal" (portaria de gestores
+                                    e fiscais). Escolher abre o PDF numa nova aba. API: /api/instrumentos/documentos-pdf?processo= e
+                                    /api/instrumentos/pdf?documento= (radar_backend/apigov.documentos_pdf).
+       NC / NE / PF / Desembolso / Pagamento  livro de movimentos. Clicar no nº do documento abre um popup com TODAS as informações
+                                    de origem (vínculo em tg_execucao_join, linha bruta do arquivo do TG, tg_ob_detalhe, tg_pf_*, SIAFI,
+                                    Transferegov, manual). Botão DESVINCULAR: tira o documento do processo (tabela desvinculos; o join não o
+                                    religa nas próximas cargas; o livro o omite em todas as fontes; as linhas tiradas ficam guardadas).
+                                    Botão VINCULAR (topo do livro): lista os desvinculados — "deste processo" = revincular (desfaz);
+                                    "de outro processo" = passa para este processo (tabela vinculos_manuais; o join o põe aqui nas
+                                    próximas cargas, método MANUAL_USUARIO). APIs: /api/instrumentos/documento-origem, /desvincular,
+                                    /desvinculados, /vincular.
+       Cartões em OUTROS           instrumentos "a tratar" (26/09/2026): TC Guajará-Mirim, TC Caruari, Barra do Corda, 6 TEDs SIAFI sem
+                                    processo (674045, 677253, 684401, 684880, 688307, 696223), Aporte INFRAERO-2 (SPEs), Obras Infraero,
+                                    Fraport, Inframerica. Sem processo real a chave é "SEM-PROCESSO/<nome>". Vínculo: PIS_OUTROS_MANUAIS
+                                    (criar_tg_execucao_join.coletar_outros_manuais — só documentos ainda sem vínculo). O DETALHE desses
+                                    cartões mostra "Tudo o que há na base" (/api/instrumentos/base-completa): instrumento, cadastro,
+                                    documentos, cada NE/NC/OB/PF com TODOS os campos da linha de origem, e os nºs de processo SEI
+                                    citados em destaque (aviso quando o instrumento não tem processo).
+       Execução por localidade (PI) quadro no detalhe quando o processo tem 2+ PIs (ex. Aporte Infraero, por aeroporto; rótulos em
+                                    subdivisao_pi, gerada de INSTRUMENTOS_ADICIONAIS["_subdivisoes"]).
+       PF — TED / PF — convênio     programação financeira (TED) ou execução financeira (empenho, desembolso,
+                                    pagamento) do convênio/TC; vêm só do GOV.
+     Cronogramas do SEI: lidos dos PDFs de Plano de Trabalho (scripts/pt_cronogramas.py) pelas COORDENADAS das
+     palavras (com as tabelas extraídas como segunda leitura) e validados pela soma (repasse + contrapartida = total geral;
+     metas = total do cronograma de execução). Erros de digitação do próprio documento só são corrigidos por
+     decisão sua, em CORRECOES_VALORES (o valor lido fica em valor_lido, o motivo em observacao).
+     Documentos que não fecham ficam de fora das telas (ver pt_cronograma_docs.observacao).
+  Base de Dados > Transferegov  GovTED | GovTC | DINV (ver item 6)
+  Orçamento / Execução          leem a planilha do Tesouro Gerencial de dados/tg/ (/api/tg/orcamento)
+
+
+6. BOTÕES DE ATUALIZAÇÃO (Base de Dados > Transferegov)
+-------------------------------------------------------
+  API-TED  (GovTED)
+     1) consulta a API do módulo TED com o filtro da UG 110591 e grava a coleta em dados/APITED/;
+     2) compara com o que já está no Instrumentos.db;
+     3) grava o que é novo, alterado ou removido, marcando cada linha com a data da execução;
+     4) abre um popup com as alterações por instrumento.
+     O histórico das execuções aparece no próprio painel ("Ver alterações" reabre o popup).
+  API-TC  (GovTC)
+     Igual ao anterior, usando o módulo Transferências Discricionárias e Legais
+     (UG 110591 + instrumentos do Cadastro) e a pasta dados/APITC/.
+     Não há API pública: os dados vêm dos CSVs diários do repositório de dados abertos (download grande).
+  API DINV
+     Baixa a planilha do link configurado para dados/DINV/ e reconstrói dados/DINV/dinv.db.
+     A atualização do DINV NÃO é incorporada ao Instrumentos.db; a base inicial do DINV continua lá.
+     Conclua o login/Touch ID quando a aba abrir.
+
+  Para ver "quando executei e o que mudou":
+     SELECT * FROM transferegov_execucoes ORDER BY id DESC;
+     SELECT * FROM transferegov_alteracoes WHERE instrumento='<processo SEI>' ORDER BY id DESC;
+
+
+7. INCLUIR UM DOCUMENTO SEI NOVO / RECONSTRUIR O BANCO
+------------------------------------------------------
+  1) coloque o PDF em dados/INSTRUMENTOS/<número do documento>.pdf
+  2) python3 scripts/extrair_pdfs_cache.py      (texto/OCR do PDF novo, gravado em cache_pdf)
+  3) se o documento é aditivo/instrumento de um processo que já existe, registre o vínculo em
+     VINCULOS_INICIAIS no início de scripts/criar_base_completa.py (processo, papel, documento)
+  4) python3 scripts/criar_base_completa.py     (reconstrói o banco; o anterior é a "semente")
+  5) depois disso o PDF pode ser apagado da pasta: o original fica no SEI.db (arquivos_pdf).
+
+  O script recria o banco por inteiro, mantendo tudo o que veio da planilha, do DINV e do
+  Transferegov, e troca o arquivo só se a construção terminar sem erro. Guarde um backup do
+  Instrumentos.db (única cópia da antiga planilha) e do SEI.db (única cópia dos PDFs).
+
+
+8. ESTRUTURA DO CÓDIGO
+----------------------
+  app.py                            entrypoint
+  radar_backend/
+    radar_config.py                 caminhos e constantes
+    radar_util.py                   log, estado.json, helpers
+    radar_core.py                   "/", /api/status
+    apigov.py                       botões GovTED/GovTC (coleta + comparação em segundo plano), INSTRUMENTOS
+    govted.py                       telas PF / Cronograma / Metas e Etapas do TED (lê do Instrumentos.db)
+    dinv.py                         /api/dinv/*  (atualização do DINV em dados/DINV)
+    tg_orcamento.py                 /api/tg/orcamento (abas Orçamento e Execução)
+  scripts/
+    criar_base_completa.py          reconstrói o Instrumentos.db (SEI, conciliação, fontes)
+    criar_base_sei.py               funções de leitura de PDF usadas pelo script acima (não roda sozinho)
+    extrair_pdfs_cache.py           extrai texto/OCR de PDFs novos para cache_pdf
+    pt_cronogramas.py               lê os cronogramas dos Planos de Trabalho (chamado pelo criar_base_completa.py)
+    extrair_teds_fnac.py            coletor da API TED (grava em dados/APITED)
+    extrair_transferegov_legais.py  coletor Discricionárias e Legais (grava em dados/APITC)
+    apigov_diff.py                  compara coleta x Instrumentos.db e registra alterações
+    instrumentos_db.py              utilitários para gravar dados no Instrumentos.db
+    criar_tg_execucao_join.py       reconstrói tg_execucao_join (dados/tg/ + API TransfereGov já
+                                    coletada x instrumentos.numero_siafi/processo_sei). Idempotente:
+                                    apaga e recria a tabela inteira a cada execução, não acumula
+                                    duplicata. Não baixa nada, só lê dados/tg/ e o próprio banco.
+                                    Rode de novo sempre que dados/tg/ for atualizado manualmente
+                                    (baixar de novo a pasta do Drive, item 3) ou depois de uma nova
+                                    coleta GovTED (botão API-TED), já que PF/TRF vêm de lá.
+                                    Confere sozinho, antes de coletar, se algum arquivo esperado
+                                    sumiu, se apareceu arquivo novo não reconhecido, se alguma
+                                    coluna-chave mudou de nome, ou se as tabelas do GovTED estão
+                                    vazias — qualquer um desses casos imprime "AVISO" (e um resumo
+                                    "!!! N AVISO(S) !!!" no final); o script segue rodando, mas os
+                                    números daquela etapa ficam incompletos até o problema ser
+                                    corrigido.
+  RADAR.html                        interface (servida em "/")
+
+
+OBSERVAÇÕES
+-----------
+- Processos.xlsx não é mais usado; as rotinas PF_Processos, Check Cadastro e Resolver pendências SEI foram removidas.
+- A "Programação por PI" e o orçamento importado ficam no localStorage do navegador; trocar de
+  navegador ou limpar os dados do site zera essas telas.
+- dados/tg/ tem hoje 65 arquivos (db.zip de 25/09/2026: inclui radar_pf_2016.csv ... radar_pf_2026.csv, 22
+  arquivos de PF com valor). TROCA DE BASE: (1) backup do Instrumentos.db em backups/; (2) mover dados/tg para
+  backups/tg_<data_hora>/; (3) extrair o zip em dados/tg (atenção ao nome acentuado "Programação 2025.xlsx", que o
+  unzip do macOS quebra — extrair com Python/Finder); (4) rodar python3 scripts/criar_tg_execucao_join.py (regrava
+  também decisoes_usuario/livro_financeiro). Trocas feitas: bd.zip (backups/tg_20260925_153836) e db.zip
+  (backups/tg_20260925_172137; banco antes: backups/Instrumentos_20260925_172137_antes_dbzip.db).
+  Arquivo radar_pf_*.csv novo (outro ano/período) é lido sozinho, sem mexer no script.
+
+BOTÃO PI (DETALHE, ao lado do NE) — 26/09/2026
+  Mostra os PIs dos documentos ligados ao instrumento (NE, NC, OB pela NE, saldo, execução agregada, planejamento), com nº de
+  documentos e valores por etapa.
+  DESVINCULAR PI: todo documento do instrumento com aquele PI sai dele e volta à base comum (tabela pis_desvinculados; vale
+  também nas próximas cargas do TG).
+  ADICIONAR PI: grava em instrumento_pis e recalcula o join (scripts/criar_tg_execucao_join.py): todo documento do Instrumentos.db
+  com o PI e ainda sem vínculo passa para o instrumento. Documento já ligado a outro instrumento não é tomado (o aviso lista quais).
+  Código: radar_backend/pi_util.py; endpoints /api/instrumentos/pis, /pis/desvincular, /pis/adicionar (apigov.py).
+  Patos (50000.042503/2019-49): MINFRA006 adicionado (além do 14UB699534).
+  REGRA (usuário, 26/09/2026): DESVINCULAR/ADICIONAR PI só afetam documentos que trazem o PI EXPLICITAMENTE (NE, RO, saldo da NE,
+  NC, execução agregada e planejamento do TG). OB, PF e TRF não trazem PI e não são afetados.
+  DIVERGÊNCIA PI x PROCESSO: NE cujo PI é de um instrumento e cujo nº de processo (campo da própria NE) é de outro. O join grava em
+  divergencias_pi; o DETALHE dos instrumentos envolvidos mostra o aviso (⚠, junto das notas) e o DESVINCULAR PI NÃO tira essas NEs.
+
+GRU — DEVOLUÇÃO DO CONVENENTE (27/09/2026)
+  Arquivo OPCIONAL dados/tg/radar_gru.csv (consulta do Tesouro Gerencial das GRU/RA recolhidas à UG 110591). Se existir, o
+  scripts/criar_tg_execucao_join.py grava a etapa GRU em tg_execucao_join e TODAS as linhas (casadas ou não) em tg_gru_documento.
+  Colunas achadas pelo nome (sem acento): nº do documento, dia de emissão, código de recolhimento (+ descrição ao lado), nº de
+  referência, contribuinte, valor, observação. Casamento: referência = nº SIAFI do instrumento; senão processo SEI citado;
+  senão um único nº SIAFI citado na observação. Rendimento de aplicação financeira = listado, fora do saldo; o resto = SAÍDA
+  no livro de DESEMBOLSO (radar_backend/livro_financeiro.livro_gru). GRU digitada de documento (MOVIMENTOS_DOCUMENTO) sai
+  quando a mesma devolução (mesmo valor) vier do TG. TED: GRU ainda não entra no livro de PF.
+  OBTV (pagamento do convenente ao fornecedor): filtro sugerido no TG = gestão emitente 44444 + "OB - Inscrição 1" na lista
+  dos nºs SIAFI de TC/Convênio, com data de emissão, favorecido e observação.
+
+RAP — RESTOS A PAGAR (28/09/2026)
+  Tabela tg_rap (recriada por scripts/criar_tg_execucao_join.py a cada carga): itens RESTOS A PAGAR INSCRITOS / PAGOS /
+  CANCELADOS / A PAGAR (proc. e não proc.) do dados/tg/db_bi_tesgerencial.csv, movimentos mensais por exercício (janeiro =
+  inscrição; depois pagos/cancelados abatem o "a pagar"). Casa pelo PI; linha sem PI casa pelo localizador MUNICIPAL
+  ("... NO MUNICIPIO DE ...") quando ele é de um único instrumento (o "- NACIONAL" é genérico e não entra).
+  DETALHE (KANBAN): botão RAP abaixo de Plano de Trabalho/Físico-Financeiro, com o RAP a pagar do exercício mais recente ao
+  lado; clique abre o detalhamento (por exercício, por PI/localizador/natureza e por mês). Endpoint /api/instrumentos/rap.
+  Saldo da NE (radar_ne_historico_saldo) NÃO é RAP: não abate os pagamentos.
+  Botões reorganizados: TC/Convênio [NC NE] / [Desembolso Pagamento] / [PI]; TED [NC NE] / [PF Pagamento] / [PI];
+  Contrato [NC NE] / [Desembolso] / [PI].
+
+BACKUPS (28/09/2026)
+  Os backups do Instrumentos.db e das trocas de dados/tg saíram da Mesa (que sincroniza com o iCloud) e ficam em
+  ~/RADAR_backups (pasta do usuário, fora do iCloud). Guardar no máximo as 3 cópias mais recentes do banco.
+  Onde este LEIA-ME fala em "backups/", ler "~/RADAR_backups/".
+
+
+SEI.db E FOTOS (01/10/2026)
+  Botão KANBAN: a tela que antes se chamava LISTAGEM agora se chama SEI.
+  Tela SEI, ao clicar num instrumento: botão "＋ Adicionar Documento" abaixo do nome — abre a janela do sistema para escolher o
+  PDF; depois pede o nome do documento (pode ser diferente do original) e grava:
+    SEI.db       arquivos_pdf (o PDF; chave = SEMPRE o nº do documento SEI: digitado, ou lido do nome do arquivo "SEI_12345678",
+                 ou do rodapé "SEI nº ..."; sem nº, a tela pede),
+                 documentos_usuario (instrumento, nome original, hash), documentos_nomes (nome dado pelo usuário)
+    Instrumentos.db  documentos_vinculados (papel documento_usuario — preservado no rebuild) e cache_pdf (texto/OCR, em segundo plano)
+    fotos.db     fotos (imagens do documento que não são logotipo/brasão, faixa ou página escaneada inteira; mínimo 300 px)
+  REGRA (usuário, 01/10/2026): nº do documento SEI já existente na base = "documento já existente"; nada é gravado (não compara
+  conteúdo). O nome visual pode repetir entre documentos diferentes.
+  Popup ✏️ do cartão, ao lado de "＋ Adicionar SEI" (usuário, 01/10/2026 — saíram do DETALHE): lista "Documentos (PDF)" (abre o PDF),
+  ✏️ (dar outro nome a qualquer documento; em branco = nome automático) e FOTOS (galeria do fotos.db; clique amplia).
+  O documento adicionado aparece na lista na hora; o próximo scripts/criar_base_completa.py lê o texto dele como qualquer outro.
+  Código: radar_backend/arquivos_db.py. Migração (feita uma vez): scripts/migrar_sei_db.py (backup antes em ~/RADAR_backups).
+  Quem lê arquivos_pdf anexa o SEI.db (ATTACH ... AS sei): apigov._db, criar_base_completa.py, pt_cronogramas.py.
+
+POPUP ✏️ DO CARTÃO (KANBAN) — 01/10/2026
+  Campos: Instrumento · TIPO DE INSTRUMENTO (TED/TC/CONVÊNIO/CONTRATO/OUTROS — tabela instrumentos_categoria_manual, preservada no
+  rebuild; prevalece sobre a categoria lida do nome) · Nº SIAFI · Localidade · ICAO (separados; gravados como "Localidade (ICAO)")
+  · UF · Assinatura e Vigência até em DD/MM/AAAA (digitar ou 📅 calendário) · Valor atual (TOTAL, já com a contrapartida) ·
+  Contrapartida · VALOR TOTAL (sem edição: = Valor atual) · UNIÃO (sem edição: Valor atual − Contrapartida) · Situação · Objeto ·
+  Etapa. (Decisão do usuário, 01/10/2026: Valor atual inclui a contrapartida; a sugestão SEI de Valor atual é o valor total lido.)
+  "＋ Adicionar SEI": faz o mesmo que o Adicionar Documento e LÊ o documento (mesmas funções do rebuild: tipo_doc, assinaturas,
+  vigência, valores) — POST /api/instrumentos/sei/adicionar:
+    - Plano de Trabalho / Cronograma Físico-Financeiro mais recente que o atual: vínculo papel "pt" e rebuild automático em
+      segundo plano (backup antes em ~/RADAR_backups; ~3 min; GET /api/base/rebuild). Durante o rebuild, gravações ficam bloqueadas
+      (o rebuild copia as edições no início: uma gravação no meio se perderia).
+    - instrumento inicial ou prorrogação: SUGESTÃO SEI ao lado de Assinatura e Vigência até; valores lidos: SUGESTÃO ao lado de
+      Valor atual e Contrapartida. Gravar = substitui e grava só aquele campo (instrumentos_edicoes); Descartar = mantém.
+
+PI, COORDENADAS, PLANO DE TRABALHO e METAS/ETAPAS no popup ✏️ — 01/10/2026
+  PI (ao lado do Nº SIAFI): os PIs do botão PI do DETALHE, separados por vírgula; tirar = DESVINCULAR PI, acrescentar = ADICIONAR PI.
+  COORDENADAS "latitude, longitude" (graus decimais): é a MESMA coordenada do 1º aeroporto no popup do título (aeroportos_edicoes,
+  campos lat/lon) — vale para DETALHE, MAPA, listas e ✏️; vazio = volta à coordenada do aeródromo (ANAC/COMARA/DINV).
+  PLANO DE TRABALHO / METAS/ETAPAS (radar_backend/plano_trabalho.py): abre a versão ATUAL (a mesma dos botões do DETALHE), com
+  inserir/excluir linhas, mês/valor, data final. Linha 🔒 = já teve movimentação (empenho/NC/PF/TRF/OB/desembolso; nas metas, execução
+  alocada à etapa): não pode ser excluída nem mudar de mês/código. GRAVAR cria a VERSÃO DO USUÁRIO (tabelas ptu_*, preservadas), que
+  vira o documento USR:<processo> em pt_cronograma_* e PREVALECE em todos os botões (Plano de Trabalho, Físico-Financeiro, Planejado x
+  Executado, GERENCIAL) — apigov._escolher_versao; o rebuild a recria (pt_cronogramas.extrair -> plano_trabalho.materializar).
+  "＋ Adicionar SEI" com Plano de Trabalho (ou aditivo): lê o PT com o mesmo leitor do rebuild e grava SUGESTÃO (ptu_sugestao); o botão
+  fica ROSA. Ao abrir: tabela atual x sugerido (incluir/alterar/excluir; linha 🔒 nunca é excluída) e ATUALIZAR (grava com as
+  sugestões) · MANTER (descarta) · EDITAR (abre o editor com as sugestões) -> GRAVAR. (O PT novo não substitui mais sozinho.)
+KANBAN: "‹ Voltar" da EXECUÇÃO/ANDAMENTO limpa os filtros (tipo, busca, filtro avançado, etapa, ordenação).
+
+GESTOR RADAR — 01/10/2026
+  ✏️ do cartão: campo GESTOR RADAR com um ou vários nomes (＋ GESTOR RADAR ou Enter; × tira), gravados em MAIÚSCULAS no 💾 Salvar
+  (tabela instrumentos_gestores_radar, preservada no rebuild). Filtro GESTOR_RADAR ▾ ao lado do TED: lista todos os nomes já
+  gravados (com o nº de instrumentos); escolher um mostra só os instrumentos com esse nome; ✕ tira o filtro (Voltar também limpa).
+  Cadastro de nomes: no filtro GESTOR_RADAR ▾ há o campo "novo nome" + ＋ Adicionar (Enter) — grava em gestores_radar_nomes
+  (preservada no rebuild; GET/POST /api/gestores-radar). A lista do filtro e a do campo GESTOR RADAR do ✏️ (lista de gestores… e
+  sugestões ao digitar) mostram os nomes cadastrados + os já usados em instrumentos; nome gravado num instrumento entra no cadastro.
+  🗑 ao lado de cada nome do filtro GESTOR_RADAR: confirma ("Essa ação irá excluir "NOME" da gestão de todos instrumentos: confirma?")
+  e tira o nome de TODOS os instrumentos e do cadastro (POST /api/gestores-radar/excluir). Se o filtro ativo era esse nome, ele é limpo.
+
+SITUAÇÃO REGISTRADA + DATA ESTIMADA — 01/10/2026
+  ✏️ do cartão: campo "Data estimada (para cumprir a situação registrada)" em DD/MM/AAAA (tabela instrumentos_situacao_prazo,
+  preservada no rebuild). DETALHE (KANBAN e SEI): tarja no topo com a SITUAÇÃO REGISTRADA e a data estimada (faltam N dias /
+  vencida há N dias, em vermelho). Tarja AMARELA quando há algo a fazer = situação preenchida que não é final
+  (ENCERRADO/RESCINDIDO/CONCLUÍDO/EXTINTO/ARQUIVADO).
+Cartões do KANBAN: sem o 📄 (clicar no cartão já abre o DETALHE); ficam ✏️ 🗑️ ➜.
+
+POPUP DO TÍTULO DO DETALHE (aeroportos do instrumento) — 01/10/2026
+  ✏️ habilita a edição de TODOS os campos do aeroporto (COMARA / DINV / cadastro + Aeródromo ANAC + latitude/longitude) e da EXECUTORA;
+  SALVAR grava só o que mudou e volta à leitura; DESCARTAR volta sem gravar. Edições em aeroportos_edicoes (por instrumento + ICAO,
+  aplicadas por cima da fonte; preservadas no rebuild) — POST /api/aeroportos/editar. Data da fonte fora do formato (ex.: só "2027")
+  é editada como texto (não é apagada).
+  EXECUTORA (nome e CNPJ): informado pelo usuário/pré-preenchido (instrumentos_executora) > SICONV (proponente) > Módulo TED (unidade
+  executora, sem CNPJ) > CNPJ mais citado nos documentos SEI do processo, sem os de órgãos federais (5+ processos). apigov.executoras.
+  PRÉ-PREENCHIMENTO: ao carregar um documento SEI (＋ Adicionar SEI ou ＋ Adicionar Documento), os campos VAZIOS do popup (nº do
+  instrumento, objeto, assinatura, fim da vigência, valor total, contrapartida, CNPJ da executora) são preenchidos com o que o
+  documento traz — nunca sobrescreve campo preenchido.
+  VINCULADOS (01/10/2026): no popup do título, "Nº do Instrumento 🔗" = "Número do instrumento" do ✏️ (instrumentos.numero_instrumento)
+  , "Data da Assinatura do Instrumento 🔗" = "Assinatura" do ✏️ (data_assinatura_instrumento) e "Término da Vigência do Instrumento 🔗"
+  = "Vigência até" do ✏️ (vigencia_mais_futura) — editar num altera o outro (instrumentos_edicoes).
+  Datas de OBRA (início/término/previsão, COMARA "Data de início"/"Previsão de conclusão") são independentes e não recebem datas do
+  instrumento no pré-preenchimento. Número do instrumento e Nº SIAFI são identificadores INDEPENDENTES (campos separados).
+
+FICHA ÚNICA DO INSTRUMENTO — 01/10/2026 (substitui o ✏️ antigo e o popup de aeroportos do título)
+  O ✏️ do cartão (abre editando) e o NOME do instrumento no DETALHE (abre em leitura, com "✏️ Editar") mostram a MESMA ficha:
+  IDENTIFICAÇÃO · EXECUTORA · DATAS DO INSTRUMENTO (assinatura e vigência consolidadas — um valor só) · VALORES · OBJETO ·
+  LOCALIZAÇÃO (aeroporto, coordenada única, ANAC; seletor quando há vários aeroportos) · DADOS DA FONTE (COMARA/DINV: obras, etapa,
+  CIPI… — o que não repete a ficha). Campos que existem nos dois lados (instrumento x COMARA/DINV): iguais = um campo só (🔗);
+  DIFERENTES = "⚖ conciliar" com os dois valores — o usuário escolhe (ou digita) e o SALVAR grava o escolhido nos dois lados; sem
+  escolha, nada muda. SALVAR grava e volta à leitura; DESCARTAR volta sem gravar. DINV "Tipo do Instrumento" (OBRA/PROJETO) NÃO é o
+  nome do instrumento: fica em Dados da fonte.
+CONCILIAÇÃO DE DATAS (usuário, 01/10/2026; gravado em instrumentos_edicoes; backup ~/RADAR_backups/..._antes_conciliacao_datas.db)
+  Ji-Paraná TC 08/2017: assinatura 11/12/2017 (já estava). Araguari: 07/10/2025 (mantida). Varginha: 12/12/2025 (mantida). UFSC TED
+  988356/25: 12/12/2025 (mantida). Carauari: 19/12/2025. Guajará-Mirim: 19/12/2025 (mesmo caso de Carauari). ITA: vigência 20/12/2029
+  (Módulo TED). UFJF: 30/04/2024 (Módulo TED). UFSC TED 951911/23: 20/12/2028 (Módulo TED). Santa Inês: vigência 31/12/2027 e
+  assinatura 30/12/2025 (DINV). Demais: mantido o RADAR (já é a data mais recente/consolidada). GUARUJÁ: dois instrumentos — PENDENTE
+  de análise (nada alterado).
+  EXPLOSÃO N:N (usuário, 01/10/2026): um instrumento tem vários aeroportos e um aeroporto tem vários instrumentos.
+  - Instrumento com vários aeroportos: o ✏️ (e o nome no DETALHE) abre primeiro um popup com um cartão por aeroporto (+N = outros
+    instrumentos daquele aeroporto); cada cartão abre a ficha naquele aeroporto, com "‹ Aeroportos" e ‹ › para navegar.
+  - Aeroporto com vários instrumentos: popup com um cartão por instrumento (instExplodirAeroporto) — pelo botão "Instrumentos neste
+    aeroporto (N)" da ficha e pelo botão FICHAS (N) do painel do aeroporto no MAPA; com um só, abre direto a ficha.
+  - Chave do aeroporto: ICAO (sem ICAO: nome|UF). Datas parciais gravadas (ex. "2016") não são alteradas se o campo não for tocado.
+
+AEROPORTO x INSTRUMENTO (N:N) — 01/10/2026 (substitui a "explosão" em cartões)
+  KANBAN = instrumentos. Ficha do instrumento (✏️ do cartão / nome no DETALHE): o 1º campo é AEROPORTOS DO INSTRUMENTO — um botão por
+  aeroporto (com o valor do instrumento no aeroporto), × retira, "＋ Adicionar Aeroporto" com a lista de todos os aeroportos cadastrados
+  (os do RADAR + aeródromos ANAC/complemento; fora da lista: "NOME / UF - ICAO"). Inclusão/retirada gravam no SALVAR.
+  Clicar no NOME do aeroporto abre a FICHA DO AEROPORTO (aeroAbrirFicha): nome, UF, ICAO, Aeródromo ANAC, latitude/longitude (valem para
+  TODOS os instrumentos do aeroporto) + INSTRUMENTOS NO AEROPORTO: botão com o NÚMERO DO INSTRUMENTO (abre a ficha do instrumento), valor do
+  instrumento PARA o aeroporto, objeto no aeroporto e dados da fonte (COMARA/DINV); "＋ Adicionar instrumento" (campo NÚMERO DO INSTRUMENTO)
+  e × retirar, gravados no SALVAR. Topo: VALOR TOTAL INVESTIDO NO AEROPORTO = soma dos valores dos instrumentos no aeroporto.
+  MAPA = aeroportos: painel do aeroporto com "✏️ AEROPORTO" (1º edit, abre a ficha do aeroporto; substitui FICHAS) e o valor total
+  investido no aeroporto; cada cartão mostra "Valor no aeroporto".
+  Valor do instrumento no aeroporto (valor_aeroporto): informado pelo usuário > aeroporto único: valor do instrumento > COMARA: valor da
+  União no aeroporto > sem valor (vários aeroportos sem rateio — avisado no painel).
+  Tabelas: aeroportos_vinculos (processo, chave ICAO/nome, acao add|del) — preservada no rebuild; valor em aeroportos_edicoes campo
+  valor_aeroporto. Rotas: GET /api/aeroportos/catalogo, POST /api/aeroportos/vincular, POST /api/aeroportos/desvincular.
+  Instrumento com VÁRIOS aeroportos: o OBJETO do instrumento não é mais copiado para os aeroportos (cada aeroporto tem o seu) e Valor
+  atual/Contrapartida da ficha passaram a gravar (antes eram ignorados nesse caso).
+
+NACIONAL + aeroportos ligados — 01/10/2026 (pedido do usuário; backup ~/RADAR_backups/Instrumentos_20261001_2012_antes_nacional.db)
+  Ligados aos aeroportos (aeroportos_vinculos, tirando o texto da Localidade): Aporte Infraero -> SBGV, SJOG, SBSO, SBIP, SNDV, SBRJ e
+  OLÍMPIA/SP (sem aeródromo público na ANAC: coordenada aproximada do centro da cidade); Aporte INFRAERO-2 -> SBBR, SBKP, SBGR, SBCF,
+  SBGL; Inframerica -> SBSG; Fraport -> SBPA e SBCO (Base Aérea de Canoas, fora da ANAC: coordenada aproximada); 50020.003437/2025-00 -> SBPG.
+  NACIONAL (28 instrumentos sem aeroporto específico: TEDs com universidades/órgãos, SERPRO, Ágora, Praxian, BNDES, Obras Infraero e os 6
+  TEDs SEM-PROCESSO) + linhas "Nacional"/"Brasil" da COMARA (TED 002/2020, TED 946219/23 e a linha NACIONAL do TED NAVEGA 977360):
+  aeroportos.marcar_nacional -> no MAPA um ponto só, BOLINHA AMARELA locada no DF (NACIONAL_COORD), desenhada por cima das bolhas.
+  Itajaí (TC 754175/12 e TC 777036/12): UF corrigida SP -> SC (instrumentos.regioes). São obras do PORTO de Itajaí, sem aeródromo:
+  continuam fora do MAPA.
+
+CONJUNTO SAC + VALORES POR AEROPORTO — 01/10/2026 (backup ~/RADAR_backups/Instrumentos_*_antes_sac_valores.db)
+  SAC = conjunto dos instrumentos NACIONAL (31), como um "aeroporto" com vários instrumentos: rótulo SAC nas listas/cartões (KANBAN e
+  LISTAGEM continuam com um cartão por instrumento); no MAPA, bolinha amarela "SAC" no DF — clicar EXPLODE os instrumentos em volta
+  (anéis, contorno amarelo, demais aeroportos apagados); cada instrumento explodido abre a ficha (instSacExplosao).
+  Valor por aeroporto com FONTE (aeroportos_edicoes campos valor_aeroporto + valor_aeroporto_fonte; valor digitado na ficha apaga a fonte):
+   - CT 06/2021: Termo de Referência SEI 3689738 — Fonte Boa 7.394.304,48 · Itacoatiara 13.053.633,25 · Maués 8.607.472,68 (= 29.055.410,41)
+   - Aporte Infraero / Aporte INFRAERO-2 / Fraport: empenho do PI de cada aeroporto (TG em 01/10/2026; Santos Dumont 0 = NE anulada)
+  Conferidos e mantidos: TED 003/2017 (COMARA soma = valor do TED; sem documentos SEI na base). Em aberto (perguntado ao usuário):
+   - TED 002/2017: 5º TA (SEI 6608904) diverge da COMARA — Estirão 36.441.676,54 x 36.441.265,98; projeto Coari 750.000 no TA e ausente na
+     COMARA; projetos Itaituba 750.000 e São Félix do Araguaia 150.000 na COMARA e ausentes no TA; aditivo 487.992,00 (20UC) sem aeroporto.
+     Linhas duplicadas na COMARA (SNOX obra+projeto, SWLB obra+projeto) dividem a mesma chave de edição.
+   - TED NAVEGA 977360: PT (SEI 10173947) divide por LOTE (12+4+4 estações), não por aeroporto; COMARA = rateio igual 4,8 mi x 20 + linha
+     NACIONAL de 96 mi (duplica o total).
+  TED 002/2017 (decisão do usuário, 01/10/2026): Estirão = 36.441.676,54 (5º TA); Coari = obra 32.428.342,57 + projeto 750.000,00
+  (= 33.178.342,57); Itaituba (750 mil) e São Félix do Araguaia (150 mil) MANTIDOS como na COMARA, embora a NT SEI 6468079 os mostre
+  zerados no 3º TA — por isso a soma por aeroporto fica 900 mil acima do valor do TED. Os 487.992,00 (20UC, 2022) NÃO são outro aeroporto:
+  são o "saldo a repassar" dos projetos (NT 6468079: projetos 6.904.922,21, repassados 6.416.930,21) — já estão dentro do valor do TED.
+  (cont., 01/10/2026) Itaituba e São Félix ZERADOS (fonte: NT 6468079) -> soma por aeroporto do TED 002/2017 = valor do TED. Linha repetida do
+  mesmo aeroporto no instrumento (Lábrea e Oriximiná: OBRA + PROJETO) tem chave própria ("SWLB#2", aeroportos.atribuir_chaves): editar uma
+  não altera a outra; a ficha do aeroporto mostra OBRA/PROJETO no bloco. Ficha do instrumento: linha TOTAL (soma por aeroporto x valor do
+  instrumento, avisa a diferença). TED NAVEGA: linha NACIONAL da COMARA retirada (aeroportos_vinculos 'del' BRASIL) -> só os 20 aeroportos,
+  soma = 96 mi; saiu do SAC.
+  (cont., 01/10/2026) TED NAVEGA: usuário decidiu manter o RATEIO IGUAL (4,8 mi x 20), não por lote. Aporte Infraero (122.936.420,00),
+  Aporte INFRAERO-2 (5.139.054.556,00) e Fraport (431.968.000,00): valor do instrumento = empenhado (soma dos PIs), via ✏️ (instrumentos_edicoes).
+  SAC NÃO conta como aeroporto: fora de "Aeródromos com investimentos", das UFs, das bolhas por estado e da contagem do mapa (aparece só como
+  ponto amarelo e no topo da lista "SAC — conjunto nacional"). Somas separadas na Visão Geral (KANBAN e MAPA): Investimentos em aeroportos ·
+  Investimentos SAC (nacional) · Total (instEhSac = instrumento com todos os aeroportos NACIONAL).
+  TC 777036/12 (00055.002207/2012-25) — NÃO é Itajaí (01/10/2026): convênio PROFAA SAC x Estado de SP (DAESP), 6 CCI. Ligada a SBAU, SBSR,
+  SBRP, SBDN, SBML e SBAE com o valor previsto da prestação de contas (SEI 5861816; soma 9.041.720,00 = valor da TC); UF SP; localidade e
+  objeto corrigidos no cadastro (o objeto antigo era OCR de outro extrato do DOU — torres do porto de Vitória). Itajaí = só a TC 754175/12 (porto).
+  TC 754175/12 (Itajaí, molhe do porto): ponto "ITAJAÍ (PORTO) / SC" com coordenada aproximada do porto (-26.9030, -48.6560), sem ICAO
+  (aeroportos_edicoes). Agora TODOS os instrumentos aparecem no MAPA.
+
+6 TEDs ANTIGOS COM PROCESSO + DOCUMENTOS UFSCar/ANAC — 01/10/2026 (backups ~/RADAR_backups/*_antes_docs_teds.db)
+  Processos associados pelo usuário (antes SEM-PROCESSO/TED-<siafi>; linhas do Cadastro 1000+ apagadas da semente no rebuild):
+   674045 = TC 001/2012 COMAER (00055.000383/2012-22) R$ 454.935.387,02 (PC final, NT 8/2018 SEI 1006979), 28/08/2012, vig. 27/09/2017, ENCERRADO
+   677253 = TC 04/2013 UFSC (00055.001346/2013-12) R$ 35.792.800,00 (1º TA 05/12/2017, 13 parcelas), vig. 06/03/2018
+   684401 = TED 003/2015 COMAER (00055.001524/2015-77) R$ 1.974.350,54 (SIAFI CONTRANSF: CONCLUÍDO), 08/09/2015 a 31/12/2015
+   684880 = TED 4/2015 ESAF (00055.001403/2015-25) R$ 192.796,00 (PC ESAF SEI/ME 0342499: executado R$ 134.240,02), ENCERRADO
+   688307 = TED 02/2016 ESAF (00055.001098/2016-52) R$ 274.188,60 (Memorando 60/2017, SEI 0504973), assinado 09/11/2016 — sem vigência nos docs
+   696223 = TED 1/2018 SENASP/MSP (50000.009506/2018-90) R$ 69.220,53, 31/10/2018, vig. 24 meses (31/10/2020)
+  Todos TED (categoria), no SAC (NACIONAL) no MAPA. KANBAN: cartão SAC mostra o NOME do instrumento (Localidade: COMAER, UFSC, ESAF, SENASP,
+  UFSCAR…), não "SAC" (apigov lista: linha_aeroporto). Documentos gravados no SEI.db pelo nº SEI (rodapé/código verificador) ou, sem nº, por
+  identificador do conteúdo (TC-04-2013-UFSC-1TA, SIAFI-CONTRANSF-684401, ESAF-SEI-0342499, TED-01-2018-SENASP, TR-TED-03-2018-UFSCAR,
+  PLANILHA-FNAC-UFSCAR-696630 [xlsx, também em anexos_excel], DOU-2020-12-18-EXTRATO-1TA-TED-04-2018) — NUNCA pelo nome do arquivo baixado.
+  PDFs iguais aos já existentes não foram regravados (TED/PT iniciais da ANAC 2017/2018, TA 5834891, PT 5895879, 2146365, 3535943, RCOs).
+  PF UFSCar/ANAC: as diferenças eram DEVOLUÇÕES ausentes no TG — UFSCar −831.900,31 (04/09/2019) e ANAC 04/2017 −892.904,45 (04/10/2019),
+  em siafi_extratos.LANCAMENTOS_DOCUMENTO; líquidos 4.950.137,61 e 790.620,07.
+  TC 001/2012 COMAER POR AEROPORTO (01/10/2026): SEI 1006546 (Ofício 9/4SC2/8889, prestação de contas final, 68 págs.) traz a planilha por
+  item com UF/aeródromo/ICAO/município/previsto/EXECUTADO; extraída pela posição das colunas (pymupdf words) e conferida com o total impresso
+  R$ 454.935.387,02. Correções de leitura: pág. 14 (COMARA equipamentos) texto 12.467.674,08 x imagem 17.467.674,08 (vale a imagem);
+  pág. 53 "8.439,514,00" = 8.439.514,00. ICAO normalizados (BAAN->SBAN, BAAF->SBAF, SBG1->SBGL, S8BE/SOBE->SBBE, BASC->SBSC, BAMN->SBMN,
+  BACO->SBCO, SBIS->SBLS, S8MT->SBMT, SBS1->SBSJ; Moura TSD->SWOW; Santa Rosa do Purus->SSRA). 27 aeródromos + SAC (Região Amazônica/COMARA,
+  "Brasil", pedreiras = R$ 85.795.478,71) com valor_aeroporto = soma do executado (fonte gravada); itens com executado 0 não ligam aeroporto.
+  aerodromos_complemento + 8 militares/fechados (SBSC, SBAN, SBAF, SBYS, SBLS, SBCV, SBNT, SBMN) com coordenada aproximada pública.
+  Docs: 0317095 (Volume 02: Termo de Cooperação + Anexo I) = instrumento_inicial/pti; 1006546 = documento do usuário; executora COMAER
+  (00.394.429/0001-00) e objeto do termo informados (o "CNPJ mais citado" dava a INFRAERO). anac_2017_5.pdf = NT 2/2017/CAPES (SEI 0414265)
+  incluída no TED 04/2017 ANAC.
+  VOLUMES DIGITALIZADOS (01/10/2026): processo1.pdf -> TC-04-2013-UFSC (Termo de Cooperação nº 04/2013 assinado em 27/11/2013 — data lida
+  na imagem; R$ 35.792.800,00 em 12 parcelas; Plano de Trabalho com o Anexo 1 = aeródromos do estudo, mantido no SAC por ser estudo);
+  processo.pdf -> VOL-00055.001098-2016-52 (NT 165/2016, TR, minutas do TED 02/2016 e do PT — sem termo assinado; vigência do TED 02/2016
+  ESTIMADA em 30/09/2017 pelo TR "ago/2016 a set/2017"). processo2.pdf (TED 4/2015 ESAF) NÃO estava em Downloads.
+
+MAPA AJUSTADO + OBJETO CONSOLIDADO — 02/10/2026
+  MAPA (Investimentos): altura = altura da tela (calc(100vh − 170px), mín. 480px; painel lateral igual); recorte leste ampliado até
+  −31,0° (inclui Fernando de Noronha; Visão Geral também); ao passar o mouse na bolinha aparece a ETIQUETA (#mpTip, instMapaTipHtml):
+  aeroporto, nº de instrumentos, investido no aeroporto e até 6 instrumentos com etapa e valor (na explosão do SAC: o instrumento). O
+  <title> nativo dos pontos virou <desc> (a dica do navegador era lenta e duplicava).
+  OBJETO (usuário): um objeto só, linha 1 = DINV, linha 2 = RADAR. Mesmo texto (ignorando maiúsculas/acentos/pontuação), RADAR vazio ou
+  RADAR contido no DINV -> só o DINV. Aplicado a 69 instrumentos de 1 aeroporto com fonte DINV (35 com duas linhas, 34 só DINV) via
+  /api/instrumentos/editar (instrumentos_edicoes + propagação ao "Objeto do Instrumento" do DINV em aeroportos_edicoes) — a ficha deixa de
+  mostrar "⚖ conciliar" no OBJETO. Backup ~/RADAR_backups/Instrumentos_*_antes_objeto_consolidado.db.
+  NÚMERO DO INSTRUMENTO (usuário, 02/10/2026): o tipo (TC/TED/CV/Contrato) fica no campo tipo; vale o "Nº do Instrumento" do DINV quando é o
+  mesmo número do RADAR sem o prefixo de tipo (ou com zeros à esquerda / o ano a mais no DINV) — 67 instrumentos (ex.: Bom Jesus/PI
+  "TC 004/2017" -> "004/2017"). Mantidos para decisão: 50000.037260/2020-61 (TC 01/2021 x 915290/2021), 50000.030078/2020-89 (TC 002900/2022 x
+  929260/2022), 50000.032985/2020-62 (Contrato 6/2021 x DINV "N/A"). Backup *_antes_numero_consolidado.db.
+  NÚMERO GOV (02/10/2026): campo novo na ficha, entre "Número do instrumento" e "Nº SIAFI / convênio" — nº do instrumento no Transferegov;
+  tabela instrumentos_numero_gov (preservada no rebuild; lista/registro: numero_gov; edita por /api/instrumentos/editar). Preenchido com o
+  "Nº do Instrumento" do DINV (69 instrumentos); o par de conciliação do DINV passou de Número do instrumento para Número GOV. Os dois casos
+  divergentes ficaram: 50000.037260/2020-61 nº 01/2021 + GOV 915290/2021; 50000.030078/2020-89 nº 002900/2022 + GOV 929260/2022.
+  AEROPORTOS DO INSTRUMENTO (ficha): o valor ao lado do aeroporto é o TOTAL DO AEROPORTO (todos os instrumentos, "· N instr."); o valor
+  deste instrumento fica na dica do mouse; a linha TOTAL virou "TOTAL DESTE INSTRUMENTO nos N aeroportos".
+  FICHA — LAYOUT (02/10/2026): células com largura automática pelo texto (fichaAutoAjuste: mede o valor/rótulo, flex-wrap em .ficha
+  .inst-edit-grid; textareas crescem com o texto); Situação registrada (agora texto que cresce) + Data estimada numa linha própria
+  (situação larga, data estreita); datas de assinatura/vigência estreitas. Só a ficha do instrumento usa o novo layout.
+  REVISÃO DOS PIs (02/10/2026; backup *_antes_revisao_pi.db):
+   - pi_util.pi_da_linha: na planilha de programação (PLANEJAMENTO/EXECUCAO_TG_AGREGADA), texto com cara de nome de termo ("TC nº
+     969243/2024") não é PI (RE_NOME_TERMO) — sumiu de 8 instrumentos (TCs 953507, 952959, 953083, 936826, 969243, 953514; TEDs 946219, 937690).
+   - 10 NCs de detalhamento 2026NC000143-152 (Financiamento BNDES, ND 459066; a descrição no SIAFI cita por engano o processo do TC de
+     Maringá 50000.037260/2020-61) movidas para 50020.006853/2025-51 (desvinculos + vinculos_manuais, mantidos no join).
+   - Anulação 2019NE000112 da NE 2019NE000063 (PI MT01196, Moura) movida do TC 10/2017 (50000.025977/2017-64) para o TED 002/2017.
+   - PIs reais com hífen/espaço mantidos: TED NAVEGA, UFSC-FAUNA, UFSC-APOIO, 939156-PROV, ITA-972556, UFPE-946219, TED-PATI.
+   - PIs compartilhados legítimos: MINFRA010 e MT01249 (genéricos de vários TCs), SISBRAIP/VOABRASIL (contratos SERPRO antigo e novo).
+   - Para o usuário decidir: SAC00050 em "Obras Infraero" (NEs 2015-16, R$ 23.737.135,13 em 3 UGs = provável contagem tripla) e MT01172
+     (NE 2017NE000104 em Obras Infraero x 2018NE000184 no TC 05/2017, R$ 5 mi cada).
+  CONTRATO BB 11/2013 + PASSO FUNDO (02/10/2026; backup *_antes_bb.db):
+   - Novo instrumento 00055.001951/2013-93 "Contrato nº 11/2013 (Banco do Brasil)" (CONTRATO, SAC): gestão de recursos do FNAC para aeródromos
+     (art. 63-A da Lei 12.462/2011); assinado 20/06/2013, 72 meses (até 20/06/2019), valor estimado R$ 238.791.690,00 (remuneração do BB);
+     executora Banco do Brasil (00.000.000/0001-91). Docs: CT-11-2013-BB (contrato, inicial), VOL-00055.001951-2013-93 (volume 2013), NTs SEI
+     0294242/0445491/0541211/0617420/0689434/0759692/0862017/0998990/1090177, OF-184-2016-SEAP-BB. Empenho: só as NEs que citam o próprio
+     processo (UG 110590/110591), R$ 7,9 mi líquidos. NÃO ligado: 50000.035406/2018-19 (processo genérico de cancelamento de RP, Despacho
+     749/2019, dezenas de PIs SAC000xx da UG 390082 — só anulações, sem as NEs originais).
+   - SAC00050 e MT01172 saíram da regra de Obras Infraero (PIS_OUTROS_MANUAIS): Obras Infraero −R$ 88,3 mi de empenho.
+   - Passo Fundo (TC 05/2017): CORREÇÃO DE DADO DO SIAFI na leitura do TG (criar_tg_execucao_join.CORRECOES_PROCESSO_SIAFI): processo
+     "00055.025244/2017-20" -> "50000.025244/2017-20" nas linhas com PI MT01172 (regra do usuário: não vincular o processo incorreto, corrigir o
+     número). NE 2017NE000104 (R$ 5 mi) + reforço 2017NE000160 (R$ 4,4 mi) agora no TC 05/2017 por processo direto.
+  PROCESSO 50000.035406/2018-19 (cancelamento de RAP, 2018-19; docs em ~/Downloads/rap): planilha SEI 1515222 "RAP Av Regional - Análise
+  DINV" = 196 NEs em RAP (R$ 269 mi) com aeroporto/processo/instrumento/status. Achados (não aplicados): NEs em Obras Infraero que são de
+  Maringá 00055.001641/2016-11, Ribeirão Preto 00055.001643/2016-19, São Carlos 50000.005897/2017-92, Maragogi 50000.047771/2017-95, AVSEC RX
+  50000.047370/2017-35, remuneração do BB 00055.000662/2015-39; NEs 8xxxxx (RAP) de Linhares/Bonito/Coxim/Cacoal fora do livro.
+  PAPI (50000.038407/2017-34, docs em ~/Downloads/papi): processo-guarda-chuva do Programa de Auxílios à Navegação Aérea (MT01249). As NEs de
+  dez/2018 2018NE000233 (Araxá), 240 (Paracatu), 242 (Feira de Santana), 244 (Valença) foram emitidas nele e anuladas em 2019; a CONJUR exigiu
+  NUP próprio por TC (Despacho 36/2019). NE_EXECUTORA_MANUAIS agora leva cada NE ao TC de 2019 (01/2019, 13/2019, 02/2019, 03/2019) — antes
+  os TCs tinham só a anulação (empenho negativo) e Valença estava em Obras Infraero (02/10/2026; backup *_antes_papi.db).
+  INSTRUMENTOS CADASTRADOS A PARTIR DOS ACHADOS DO RAP (02/10/2026; INSTRUMENTOS_ADICIONAIS + CADASTRO_CORRIGIDOS + PIS_MANUAIS; o PI saiu da
+  lista de Obras Infraero). Documentos gravados no SEI.db pelo nº SEI ou por ID de conteúdo (nunca pelo nome do arquivo em Downloads):
+   - Maringá/PR TC nº 02/2017 (00055.001641/2016-11, SIAFI 690489, PI MT01165): R$ 81,5 mi, 5 TAs, PC aprovada (SEI 7564260). A NE
+     2018NE000186 (R$ 15 mi) citava o processo 00055.001641/2017-11: corrigida na leitura (CORRECOES_PROCESSO_SIAFI). Backup *_antes_maringa.db.
+   - Ribeirão Preto/SP TC nº 03/2017 (00055.001643/2016-19, DAESP, PI SAC00065): assinado 24/08/2017, R$ 88,8 mi -> 1º TA (24/08/2018)
+     R$ 84.585.000 (União 79,92 mi + contrapartida 4,665 mi); RESCINDIDO (denúncia) em 06/03/2020, DOU 20/03/2020. NEs 2017NE000103 (4 mi) e
+     2019NE000129 (300 mil), ambas canceladas -> empenho líquido 0. Nº SIAFI não localizado nos docs. 12 docs (ribeirao*.pdf).
+   - Maragogi/AL TC nº 001/2018 (50000.047771/2017-95, SIAFI 697072, SETRAND/AL, PI MT01245): Projeto Básico do novo aeroporto, R$ 3.211.919,84,
+     assinado 21/06/2018, extinto por decurso de prazo 16/06/2019; NE 2018NE000104 anulada (2019NE000061). Sem ICAO: ponto aproximado do
+     município (-9.0122, -35.2225) em aeroportos_edicoes. 7 docs (mara*.pdf; NT 65/2017 SEI 0682340 é do processo 00055.001392/2014-01).
+   Obras Infraero: −R$ 4 mi de empenho (a 2017NE000103 estava lá sem o cancelamento). Backup *_antes_rp_mara.db.
+   - AVSEC: Contrato nº 20/2018-MTPA x NUCTECH do Brasil (50000.047370/2017-35): 36 escâneres raio-X single view x R$ 50.000 = R$ 1.800.000
+     (adesão à ARP do PE 165/LALI-1/SEDE/2017 INFRAERO); NE 2018NE000105 saiu de Obras Infraero por processo direto (o PI SAC00062 continua
+     na lista porque também tem a NE 2018NE000040 da Detronix, outro contrato). 1º TA SEI 1633299 (+Divinópolis, Guarapuava SSGG, Umuarama,
+     Caçador) e 2º TA SEI 2131242 (Carolina e Sinop -> Guanambi e Três Lagoas): 36 aeroportos vinculados, R$ 50 mil cada. Contrato sem data
+     no PDF. Backup *_antes_avsec.db.
+   - São Carlos 50000.005897/2017-92: processo NÃO disponível na SAC (usuário) — NEs seguem em Obras Infraero.
+  DOCUMENTOS DAS PASTAS ~/Downloads/rap e ~/Downloads/PAPI (02/10/2026): 33 documentos relevantes gravados no SEI.db pelo nº SEI (HTML do SEI
+  convertido em PDF pelo Chromium; xlsx também em anexos_excel/). documentos_usuario com o processo de origem (RAP 50000.035406/2018-19 ou
+  PAPI 50000.038407/2017-34) e, quando cabe, vinculados como documento_usuario aos instrumentos: planilha 1515222 + Despacho 111/2019 ->
+  Maringá, Ribeirão, Maragogi, AVSEC, Passo Fundo, Contrato BB; NT 2/7/8/9 de 2018 e pareceres CONJUR -> TCs PAPI de Araxá, Paracatu, Feira
+  e Valença. Backup *_antes_rap_papi.db.
+   - Remuneração do BB 2018NE000094 (R$ 4.876.368,00, PI SAC00033, processo citado 50000.000662/2015-39): NE_EXECUTORA_MANUAIS -> Contrato BB
+     11/2013 (00055.001951/2013-93); o cancelamento 2019NE000071 (R$ 4.827.110,70) vai junto. Obras Infraero −R$ 49.257,30 líquido. Backup *_antes_bb094.db.
+   - Remuneração do BB, mais duas NEs (UG 110590, PI SAC00033) -> Contrato BB 11/2013 via NE_EXECUTORA_MANUAIS: 2015NE000123 (R$ 3,5 mi +
+     reforços = R$ 42.844.417,00, bate com o saldo do TG) e 2016NE000349 (R$ 2.287.619,00). Atenção: a 110591 2015NE000123 (R$ 6,67 mi) é
+     OUTRA NE (aporte INFRAERO Aracaju, processo 00055.000734/2015-48) e ficou em Obras Infraero. Contrato BB EMPENHO R$ 7,95 mi -> 53,08 mi.
+     Backup *_antes_bb2.db.
+  NEs DE RAP 8xxxxx — BONITO, COXIM, CACOAL, LINHARES (02/10/2026): nos arquivos 'NE ate 2020' o processo veio corrompido pelo Excel
+  ("5,50016E+13") e os PIs SAC00066/67/68/48 não têm regra. criar_tg_execucao_join.CONVENIOS_SICONV_NE_ATE_2020 = {839130, 839133, 839458,
+  761964}: NE sem vínculo -> convênio pela transferegov_siconv_empenho (método SICONV_EMPENHO). As NEs de 29/12/2020 (2020NE800018 Coxim,
+  2020NE800020 Bonito) NÃO usam o "valor do item" (não constam do empenhado/desembolsado do SICONV). Resultado = SICONV vl_empenhado_conv:
+  Bonito 3.877.057 (+18.000 da 2021NE000024, já existente), Coxim 2.878.183, Cacoal 1.784.585,67, Linhares 17.929.161,73 (2011NE800008 e
+  2012NE800007 vêm do SICONV no livro — não estão no TG). livro_financeiro: NE do SICONV que já aparece como EVENTO numa NE do TG não entra de
+  novo (reforço 2018NE800153 de Linhares); conferido em todos os 124 livros — só Linhares mudou. Docs: SEI 2722478, 1268723, 1268414,
+  SICONV-CV-839458-NE-2017NE800008, TRANSFEREGOV-CV-839130-2022-05-30 (pc-*.pdf: os 3 arquivos eram idênticos, todos de Bonito).
+  Backup *_antes_siconv4.db.
+  VALOR GLOBAL = SICONV (usuário, 02/10/2026; CADASTRO_CORRIGIDOS): Cacoal CV 839458 R$ 2.672.958,69 -> 2.336.732,89; Linhares CV 761964
+  R$ 19.425.137,78 -> 29.881.936,23 (União passa a 2.103.059,60 e 17.929.161,73). Bonito e Coxim já batiam. Backup *_antes_global.db.
+  LINHARES CV 761964/2011 — devolução (usuário, opção A, 02/10/2026): livro_financeiro.MOVIMENTOS_DOCUMENTO, DESEMBOLSO −R$ 1.509.916,01
+  (GRU 28895-0, 22/12/2022 = saldo de REPASSE, OB 2022OB01627); as GRUs 48802-0 (2.759.811,11 e 223.956,41) são rendimentos e não entram.
+  Fonte: relatório de PC do Transferegov (TRANSFEREGOV-PC-CV-761964-2023-03-09). Desembolso líquido 17.929.161,73 -> 16.419.245,72.
+  Processo 00055.001847/2011-37 confirmado pelo 9º TA (SEI 4281701). Só o livro de Linhares mudou (124 conferidos).
+  BLOCO DETRONIX/NUCTECH (usuário, 02/10/2026): o cartão 50000.047370/2017-35 virou "Contratos AVSEC DETRONIX/NUCTECH"; PROCESSOS_RELACIONADOS
+  50000.013503/2017-70 (contrato DETRONIX, pórticos/detectores de metais): NE 2018NE000040 R$ 1.871.500 − cancelamento 2020NE000066
+  R$ 601.905,88 (Despacho 133/2020, contrato concluído) = R$ 1.269.594,12 saiu de Obras Infraero. Empenho do bloco R$ 3.069.594,12. Valor do
+  contrato DETRONIX e aeroportos dos pórticos: não informados. Backup *_antes_detronix.db.
+  APORTES À INFRAERO (02/10/2026), ZIPs SEI_*.zip em ~/Downloads (não gravados no SEI.db, só lidos):
+   - Processos 00055.000177/2014-84 (Decreto de aumento de capital), 00055.000734/2015-48 (liberações 2015), 50000.004393/2017-55,
+     50000.032489/2017-11, 50000.017789/2018-43, 50000.024926/2019-87 (liberações anuais/obras), 50000.006314/2018-21 e 50000.013220/2018-17
+     (SPEs Brasília/Galeão/Confins) = processos de LIBERAÇÃO de aporte (ação 0E45, ND 459065), cada um com vários empreendimentos.
+   - 15 NEs de 2017 citavam "5000.004393/2017-55": CORRECOES_PROCESSO_SIAFI -> 50000.004393/2017-55.
+   - ARACAJU separado (usuário): novo bloco SEM-PROCESSO/APORTE-INFRAERO-ARACAJU, PIs SAC00058 (pista, PAC R$ 35 mi), SAC00051 (TPS, R$ 29 mi) e
+     MT01253 (certificação) saíram de Obras Infraero; valor = empenhado R$ 122.291,525,00 (22 linhas). Backup *_antes_aracaju.db.
+   - Infraero.pdf = processo 00055.000307/2016-41 (PEAE - Programa Especial de Adequação do Efetivo): NE 110590 2016NE000061 R$ 50 mi,
+     fonte 100 (Tesouro), fora do livro — não cadastrado.
+  TC 001/2012 COMAER (00055.000383/2012-22) SEM SAC (usuário): os R$ 85.795.478,71 de itens sem aeródromo da PC (SEI 1006546) foram repartidos —
+  viaturas CCI pelo aeródromo de destino das fichas de execução físico-financeira (2012.zip; AP-2, AC-3, CRS, ABT, CLP, CACE; novos SBGW, SBCO,
+  SBST, SBGR, SBSJ — SBCO/SBST em aerodromos_complemento); pool CCI (material, reforma Buffalo, CACE sem destino) proporcional às viaturas;
+  itens "Região Amazônica" da COMARA + pedreira de Monte Alegre proporcionais às obras COMARA (SWEE, SBYA, SWEI, SWOW, SBUA, SSRA, SWJV, SWUQ);
+  pedreira de Moura -> SWOW. 32 aeródromos, soma = R$ 454.935.387,02. Docs: VIATURAS-CCI-TC-001-2012-COMAER (extrato 46 págs.) e 1016747.
+  MAPA/ficha: SAC não é aeroporto — rótulos "Investimento / Investimentos" (RADAR.html instPainelAero e aeroAbrirFicha).
+  SELETOR "Incluir Aporte INFRAERO-2" (usuário, 02/10/2026): ao lado de "Incluir BNDES" na tela de Instrumentos (instAporte2: listas, mapa,
+  totais) e na Gerencial (gerAporte2: totais e gráfico); ambos DESMARCADOS ao abrir. Identifica o processo SEM-PROCESSO/APORTE-INFRAERO-2.
+  Na Gerencial o Aporte-2 hoje não aparece (sem movimento no ano), o seletor passa a valer se aparecer.
+  TC 001/2012 COMAER: rateio proporcional da COMARA e do pool de viaturas APROVADO pelo usuário (02/10/2026).
+  OBRAS INFRAERO preenchido (usuário, 02/10/2026): valor = empenhado R$ 5.067.658.453,73 (CADASTRO_CORRIGIDOS); 55 aeroportos + "Investimentos"
+  (aeroportos_vinculos/aeroportos_edicoes): PI com nome de aeroporto -> o aeroporto (84 PIs mapeados à mão); SAC00004 2014 pelo PTRES do subtítulo
+  (75358 Foz, 75359 Santarém, 75372 Macaé ... 75398 Teresina — conferido com a tabela da LOA 2014 do processo 00055.000177/2014-84); SAC00004
+  2017-2019 pelos pedidos SISPAC (Macaé, Londrina, Petrolina, Marabá); SAC00004 genérico 2015-2016 (R$ 214,4 mi) proporcional ao SAC00004
+  identificado; SAC00034 desapropriação -> Viracopos (SBKP); MT01215 carros contra incêndio (R$ 36,6 mi, "Nacional" nos pedidos) proporcional
+  aos aeroportos do bloco; programas nacionais (navegação aérea, reparos em pistas prioritárias, aerolevantamento, equipamentos, INF00019,
+  SCI, SAC00033) R$ 257,1 mi ficam em "Investimentos". Backup *_antes_obras_rateio.db.
+  Seletores "Incluir": os textos BNDES e INFRAERO-2 são links — abrem o popup do investimento sem marcar/desmarcar (instAbrirDetalhePopupMapa).
+  CÓPIAS 390082 de NEs da 110590 (usuário, 02/10/2026): criar_tg_execucao_join.NES_COPIA_TRANSFERENCIA — emissão da cópia ignorada (os demais
+  eventos da cópia valem): 390082 2016NE800021 (= 110590 2016NE000349, remuneração BB, R$ 2.287.619) e 390082 2014NE800079 (= 110590
+  2014NE000508, Galeão MD00055, R$ 26.064,34; cópia cancelada em 2019). Obras Infraero −R$ 2.313.683,34 -> R$ 5.065.344.770,39 (valor e
+  rateio ajustados: "Investimentos" −2.287.619, SBGL −26.064,34). Backup *_antes_dupl390082.db.
+  SELETORES (usuário, 02/10/2026): só os nomes, sem "Incluir": BNDES · INFRAERO-Concessões · INFRAERO-Obras (Instrumentos: instBndes/
+  instAporte2/instObras; Gerencial: gerBndes/gerAporte2/gerObras). INFRAERO-Concessões = SEM-PROCESSO/APORTE-INFRAERO-2 (tipo renomeado de
+  "Aporte INFRAERO-2"); INFRAERO-Obras = SEM-PROCESSO/OBRAS-INFRAERO, desmarcado ao abrir. O nome é link para o popup do investimento.
+  ORÇAMENTÁRIO-FINANCEIRO (usuário, 02/10/2026): no popup de BNDES, INFRAERO-Concessões e INFRAERO-Obras o botão "Ver ações e financeiro…"
+  virou "Orçamentário-Financeiro" (RADAR.html INST_ORCFIN / instAbrirOrcFin): totais de NC, NE, Liquidação e Pagamento (OB), com sublinhas
+  expansíveis ano › documento › eventos, a partir de /api/instrumentos/livro. Liquidação: as bases não têm NS nem evento de liquidação —
+  mostra "≥ pago" quando há OB. NCs do BNDES 2026NC000143-152 = detalhamento de crédito (459000 -> 459066), líquido zero.
+  Par do Galeão: passa a ignorar a emissão da ORIGINAL 110590 2014NE000508 (a cópia 390082 2014NE800079 tem o cancelamento) —
+  NES_EMISSAO_IGNORADA; livro de Obras = join = R$ 5.065.344.770,39.
+  INFRAERO-Concessões e INFRAERO-Obras TRAVADOS (usuário, 02/10/2026): marcados (incluídos) e desabilitados, em marca d'água (opacidade 0,45),
+  nas telas Instrumentos e Gerencial, até o usuário definir; "Limpar filtros" os mantém marcados. O nome continua abrindo o popup.
+  Para destravar: tirar "checked disabled" e a classe inc-fixo dos 4 labels e voltar instLimparFiltros a checked=false.
+  POPUP dos investimentos BNDES / INFRAERO-Concessões / INFRAERO-Obras (usuário, 02/10/2026): seção "AEROPORTOS VINCULADOS" com um botão por
+  aeroporto (valor no aeroporto, ordenado do maior para o menor); o clique abre a ficha do aeroporto (instAerosBotoesHtml; também no painel lateral).
+  CONCILIAÇÃO DO ✏️ (usuário, 02/10/2026): escolhas aplicadas pela própria ficha (Dourados TED valor 99.172.868,72 + contrapartida 600.000;
+  UFPE UF PE; Carauari; Jijoca de Jericoacoara; executoras DER/ES, SEINFRA/PE, SEINC/MA ×3, SEINFRA-MS). RADAR.html fichaEquiv: diferença só de
+  formatação (zeros à esquerda, UF/sufixo na localidade, "Prefeitura Municipal"/"Governo do Estado", mesmas palavras ou sigla na executora)
+  não vira ⚖ e o SALVAR não regrava a fonte; objeto de instrumento com vários aeroportos não é conciliado com o de um aeroporto.
+  OBJETO: 10 cartões com o texto DINV/COMARA; 19 objetos ruins/vazios refeitos pelo documento inicial (contrato/TED), Transferegov/COMARA ou,
+  sem documento, descritivos (aportes INFRAERO, Fraport, Inframerica). Pendentes: Ponta Grossa 50020.003437/2025-00 e Barra do Corda 014/2019.
+  NOME NO CARTÃO: campo novo na IDENTIFICAÇÃO da ficha (tabela instrumentos_nome_cartao, preservada); vazio = automático. CT 06/2021 =
+  "INFRAERO/ITACOATIARA-MAUÉS-FONTE_BOA". Backup *_antes_conciliacao.db / *_antes_objetos.db.
+  KANBAN = INSTRUMENTOS (usuário, 02/10/2026): nos cartões da categoria OUTROS o título automático é o NOME do instrumento (apigov.lista:
+  linha_aeroporto = tipo_instrumento) — INFRAMERICA, OBRAS INFRAERO, INFRAERO-CONCESSÕES, APORTE INFRAERO, FRAPORT, FINANCIAMENTO BNDES…; antes
+  era o aeroporto (ex.: "SÃO GONÇALO DO AMARANTE") ou "N AEROPORTOS". TC/CV/TED seguem com o aeroporto. O "Nome no cartão" do usuário prevalece.
+  PONTA GROSSA (usuário, 02/10/2026): o cartão 50020.003437/2025-00 não é instrumento assinado — é o pedido de EVTEA da Prefeitura (Ofício
+  nº 342/2025/ASPAR-MPOR, SEI 10230303). CADASTRO_CORRIGIDOS: tipo "Pedido de EVTEA — Ponta Grossa/PR" + objeto do ofício; antes o cartão
+  mostrava o aeroporto e as listas o nº do processo. O instrumento de Ponta Grossa é o TC nº 04/2019 (50000.005038/2019-65).
+  Pedido de EVTEA — Ponta Grossa (50020.003437/2025-00): etapa manual ESTRUTURAÇÃO, categoria OUTROS
+  (usuário, 02/10/2026; instrumentos_etapa_manual).
+  BARRA DO CORDA — auditoria (usuário, 02/10/2026): 014/2019 (CARTAO-BARRA-DO-CORDA-014-2019) = EXECUÇÃO (informação do usuário; sem dado
+  na base); TC nº 994300/2026 (50020.005877/2025-93) = ESTRUTURAÇÃO (assinado 08/07/2026, mas em cláusula suspensiva até 30/11/2026 —
+  projeto de engenharia e TR; projeto básico em elaboração; DINV "projeto prévio"; nada desembolsado). Ambos em instrumentos_etapa_manual.
+  MAPA — SAC explodido (usuário, 02/10/2026): a dica (mouse) de cada investimento mostra nome, tipo/nº, etapa, localidade(s), executora,
+  objeto (resumo), valor, vigência e processo (RADAR.html instMapaTipHtml).
+  MAPA — aba Investimentos (usuário, 02/10/2026): dois botões sempre no topo do painel, POR ESTADO (lista de UFs com nº de investimentos,
+  aeroportos e valor nos aeroportos; clique abre os investimentos do estado, ‹ Estados volta) e POR AEROPORTO (lista de aeroportos).
+  Painel do estado: "Valor investido no estado" = soma nos aeroportos da UF; "Valor total dos instrumentos" ao lado. 36 aeroportos que
+  estavam sem nome (vinculados só por ICAO) receberam o município da ANAC.
+  MAPA (usuário, 02/10/2026): retirados os botões "Investimentos do estado" e "Listar todos os aeroportos" do painel (redundantes com
+  POR ESTADO / POR AEROPORTO) e o tratamento data-mapa-uf-lista; data-mapa-todos continua (Limpar filtro e ‹ Estados).
+  FICHA DO SAC / AEROPORTO (usuário, 02/10/2026): na lista "INSTRUMENTOS NO …", ao lado do número aparece o nome/localidade do instrumento
+  (ex.: "TED 02/2016 · ESAF") e a dica do mouse traz só nome — instrumento · etapa e a localidade (instDicaTexto).
+
+== 02/10/2026 — Processos relacionados editáveis + FRAPORT (fraport.zip) ==
+- Ficha ✏️: seção "Processos relacionados" (abaixo de Processo): ＋ Vincular processo / × desvincular. APIs POST /api/instrumentos/processos/vincular|desvincular
+  {processo, relacionado, motivo}. Gravado em processos_relacionados_usuario (PRESERVADA no rebuild) e mesclado em processos_relacionados (fonte "usuário (ficha do
+  instrumento)"); dispara rebuild (recusa com 409 se já houver rebuild rodando). Os do script (PROCESSOS_RELACIONADOS) não têm ×.
+- FRAPORT: vinculados 50020.007382/2024-18 (pagamentos, 8 OBs), 50020.005662/2024-91 (crédito/NE 2024NE000025) e 50020.003223/2024-44 (NE 2024NE000015 Canoas).
+  Objeto, nº (Decisão ANAC nº 683/2024 — medida cautelar) e data 23/08/2024 editados. 14 documentos no SEI.db (Ofício 157/2024/SRA 8921203, NT 12/2024 8921208,
+  MP 1.260 8923257, NE 8923403, Despacho 130/2024/CGGAI 8922943, Ofício 658/2024 TCU 8934317, NTs SRA 8988404/9029507/9056872/9114472/9208641/9212115/9374071,
+  Lei 15.105/2025 10498440). Parcelas: reconstrução 362.022.000,00 (= teto) + manutenção 62.669.920,48 (teto 63.946.000) = 424.691.920,48 pagos;
+  saldo da NE 25 = 1.276.079,52. Join e livros sem diferença antes x depois.
+
+== 02/10/2026 — OBJETO num quadro só (1. fonte / 2. RADAR) ==
+- Instrumentos de 1 aeroporto cujo objeto RADAR difere do DINV/COMARA: objeto = "1. <texto DINV/COMARA>\n2. <texto RADAR>" (26 instrumentos);
+  textos praticamente iguais (≥90%) ficaram só com o da fonte (16). A fonte (aeroportos_edicoes) voltou ao texto original DINV/COMARA (backup em
+  _bk_aeroed_obj_0210). fichaEquiv: objeto numerado que contém o texto da fonte = conciliado (🔗). /api/instrumentos/editar NÃO propaga
+  objeto numerado para a fonte. Balsas: 2. = objeto do TED 02/2019 (não o do 4º TA); OCR limpo em Noronha, Santa Rosa, Ji-Paraná, Barreirinhas.
+  Varredura de todas as fichas: 0 itens "⚖ conciliar".
+
+== 02/10/2026 — PROCESSO vazio editável ==
+- Instrumento sem processo SEI (chave interna SEM-PROCESSO/…, CARTAO-…, ESTRUTURACAO-…): o campo Processo aparece VAZIO e é editável na ficha ✏️.
+  O valor vai para instrumentos_processo_informado (PRESERVADA); a chave interna não muda e não aparece mais nas telas (instProcTxt).
+  O join trata o processo informado como o processo do instrumento (NE/OB/NC que o citam entram nele); salvar dispara rebuild.
+- FRAPORT: Processo = 50020.007382/2024-18 (saiu de "relacionados"). Join e livros sem diferença antes x depois.
+
+== 02/10/2026 — Processos dos blocos INFRAERO + documento em processo relacionado ==
+- INFRAERO-Concessões: Processo 50000.006314/2018-21 (aporte às SPEs 2018); relacionados 50000.013220/2018-17 (SPE Confins) e 50000.004406/2017-96.
+  INFRAERO-Obras: Processo 00055.000177/2014-84; relacionado 50000.069703/2019-49. Aracaju: Processo 50000.004393/2017-55; relacionado 50000.017789/2018-43.
+- Blocos SEM-PROCESSO/… são montados por PI: processo informado e relacionados neles são SÓ DOCUMENTAIS (o join ignora; sem isso, as NEs do aporte
+  às SPEs passavam a PROCESSO_DIRETO e 2017NE000013 perdia R$ 260,4 mi). Join idêntico linha a linha e livros iguais antes x depois.
+- Adicionar Documento / Adicionar SEI: campo "Processo do documento" (principal ou relacionado) -> sei.documentos_usuario.processo_documento;
+  API GET /api/instrumentos/processos-documento; a lista de PDFs mostra "· proc. X" quando o documento é de um relacionado.
+- Aracaju no SEI.db: 0382499 e 0385943 (proc. 50000.004393/2017-55), 1267401 e 1299859 (proc. 50000.017789/2018-43).
+
+== 02/10/2026 — OBs de 2014-2015 lidas no processo 00055.000177/2014-84 (OCR) ==
+- criar_tg_execucao_join.OBS_DOCUMENTO + coletar_pagamento_documento: 23 OBs (R$ 1.248.591.897,47) reconstruídas das telas CONOB do processo;
+  rateio por NE (531814/531010) confere com o valor em 22 delas; entram como PAGAMENTO pelo vínculo da NE. Usuário: "considere as OBs mesmo que
+  duvidosas; incompatibilidade com futuros TGs corrigimos depois". Se o TG trouxer a mesma OB, prevalece o TG.
+  Dúvidas: nº parcialmente ilegível em 2014OB8000?? (31/01), 2014OB800006? (14/03), 2014OB80001? (22/05), 2014OB80002? (02/07), 2014OB80003? (01/10);
+  2014OB800027 com rateio cortado (R$ 19.725.948,00 sem NE -> bloco Obras, OB_DOCUMENTO_SEM_NE); 2014OB8000?? paga 2013NE000060 (R$ 106 mi,
+  fora do RADAR -> bloco Concessões, OB_DOCUMENTO_BLOCO).
+- Resultado: Obras R$ 780.809.242,47 (15 OBs) e Concessões R$ 467.782.655,00 (8 OBs) em Desembolso/Pagamento; demais livros sem diferença.
+
+
+API-TG AUTOMÁTICA (Tesouro Gerencial via Google Drive) — 03/10/2026
+-------------------------------------------------------------------
+  Os arquivos do Tesouro Gerencial chegam (subscrição + Power Automate) na pasta do Google Drive
+  "03.001.1.Radar". O RADAR baixa sozinho, pela API do Google Drive (somente leitura), só os arquivos
+  NOVOS ou ALTERADOS para dados/tg/ e, se algo mudou, reconstrói tg_execucao_join:
+    - ao abrir o RADAR (python3 app.py), em segundo plano, sem pedir login;
+    - no botão API-TG (aba Base de Dados), na hora.
+  Configuração (uma vez): botão API-TG > passo a passo na tela > enviar o JSON do "ID do cliente OAuth"
+  (tipo App para computador, criado no console.cloud.google.com com a Google Drive API ativada) >
+  API-TG de novo > entrar no navegador com a conta que acessa a pasta > Permitir.
+  Credencial e token: ~/.radar_fnac (fora da Mesa/iCloud). Para trocar a pasta: ~/.radar_fnac/drive_config.json
+  com {"folder_id": "..."}. Versão anterior dos arquivos substituídos: ~/RADAR_backups/tg_drive_<data>/ (máx. 3).
+  Código: radar_backend/tg_drive.py.
+  BATIMENTO (03/10/2026): depois de cada atualização do TG, o RADAR confere as ENTRADAS NOVAS (NE, NC, OB, PF, GRU do FNAC)
+  com o Instrumentos.db — o que as regras ligam fica vinculado; PI novo que a planilha de programação liga a um único TED/TC é
+  cadastrado sozinho no instrumento; o resto vira PENDÊNCIA com sugestões no botão BATIMENTO (ao lado do API-TG), onde se
+  vincula (a chave do documento — PI ou processo — vai para o instrumento) ou se marca "não é de instrumento".
+  Código: scripts/batimento_tg.py e radar_backend/batimento.py; tabelas tg_batimento e tg_batimento_exec.

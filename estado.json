@@ -1,0 +1,22 @@
+{
+  "versao": 1,
+  "ultima_atualizacao": "2026-09-06T15:44:36-03:00",
+  "transferegov": {
+    "ug": "110591",
+    "ultima_execucao": "2026-09-02T17:28:28-03:00",
+    "sucesso": true,
+    "ultimo_resultado": "ok"
+  },
+  "dinv": {
+    "ultima_execucao": "2026-09-04T11:13:23-03:00",
+    "sucesso": true,
+    "arquivo": "PlanEstrategico.xlsx",
+    "abas": 23,
+    "registros": 7061,
+    "atualizado_em": "2026-09-04T11:13:19-03:00",
+    "arquivo_mapa": "brasil_estados.geojson",
+    "estados": 27,
+    "mapa_atualizado": false,
+    "origem_mapa": "malha incorporada ao RADAR e armazenada no dinv.db"
+  }
+}

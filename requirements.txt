@@ -1,0 +1,13 @@
+# RADAR FNAC — dependências do backend local
+# Instale com:  python3 -m pip install -r requirements.txt
+
+flask>=3.0
+openpyxl>=3.1
+requests>=2.31
+pymupdf>=1.26
+pdfplumber>=0.11
+pymupdf4llm>=0.0.27
+rapidocr-onnxruntime>=1.4
+google-api-python-client>=2.0   # API-TG automática (Google Drive)
+google-auth-oauthlib>=1.0
+gunicorn
