@@ -161,3 +161,10 @@ def garantir_pastas(caminho) -> str:
     if not os.path.exists(caminho):
         os.makedirs(caminho, exist_ok=True)
     return str(caminho)
+def escrever_log(texto: str) -> None:
+    """Registra uma mensagem de log simplificada no terminal do servidor."""
+    print(f"[RADAR LOG] {texto}")
+
+def localizar_html(nome_arquivo: str) -> str:
+    """Retorna o caminho ou o próprio nome do arquivo HTML principal."""
+    return nome_arquivo
