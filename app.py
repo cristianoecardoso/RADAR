@@ -20,7 +20,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 DADOS_DIR = BASE_DIR / "dados"
 
-from radar_backend.radar_util import escrever_log, localizar_html
+from radar_backend.pi_util import escrever_log, localizar_html
+
 
 app = create_app()
 
