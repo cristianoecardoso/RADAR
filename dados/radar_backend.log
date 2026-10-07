@@ -1,0 +1,482 @@
+[2026-09-21T19:01:32-03:00] BACKEND INICIADO
+[2026-09-21T19:10:54-03:00] BACKEND INICIADO
+[2026-09-21T19:12:19-03:00] BACKEND INICIADO
+[2026-09-21T19:22:45-03:00] BACKEND INICIADO
+[2026-09-21T19:25:48-03:00] BACKEND INICIADO
+[2026-09-21T19:48:33-03:00] BACKEND INICIADO
+[2026-09-21T19:55:18-03:00] BACKEND INICIADO
+[2026-09-21T20:05:19-03:00] BACKEND INICIADO
+[2026-09-21T20:08:52-03:00] BACKEND INICIADO
+[2026-09-21T20:13:27-03:00] BACKEND INICIADO
+[2026-09-21T20:19:13-03:00] BACKEND INICIADO
+[2026-09-21T20:23:47-03:00] BACKEND INICIADO
+[2026-09-21T20:29:30-03:00] BACKEND INICIADO
+[2026-09-21T21:39:57-03:00] BACKEND INICIADO
+[2026-09-21T21:42:04-03:00] BACKEND INICIADO
+[2026-09-22T09:14:33-03:00] BACKEND INICIADO
+[2026-09-22T09:17:22-03:00] BACKEND INICIADO
+[2026-09-22T09:38:35-03:00] BACKEND INICIADO
+[2026-09-22T09:41:38-03:00] BACKEND INICIADO
+[2026-09-22T16:58:46-03:00] BACKEND INICIADO
+[2026-09-22T17:24:08-03:00] BACKEND INICIADO
+[2026-09-22T18:47:35-03:00] BACKEND INICIADO
+[2026-09-23T07:57:06-03:00] BACKEND INICIADO
+[2026-09-23T07:57:30-03:00] TG | tg_execucao_join atualizada: 5300 linhas, cobertura 73/92, 0 aviso(s)
+[2026-09-23T08:05:22-03:00] TG | tg_execucao_join atualizada: 6435 linhas, cobertura 74/92, 0 aviso(s)
+[2026-09-23T09:32:04-03:00] BACKEND INICIADO
+[2026-09-23T14:56:07-03:00] BACKEND INICIADO
+[2026-09-23T14:59:06-03:00] BACKEND INICIADO
+[2026-09-23T15:05:45-03:00] BACKEND INICIADO
+[2026-09-23T15:06:00-03:00] BACKEND INICIADO
+[2026-09-23T15:13:17-03:00] BACKEND INICIADO
+[2026-09-23T15:22:27-03:00] BACKEND INICIADO
+[2026-09-24T07:23:16-03:00] BACKEND INICIADO
+[2026-09-24T07:25:02-03:00] BACKEND INICIADO
+[2026-09-24T07:25:17-03:00] BACKEND INICIADO
+[2026-09-24T07:26:02-03:00] BACKEND INICIADO
+[2026-09-24T07:30:58-03:00] BACKEND INICIADO
+[2026-09-24T07:31:36-03:00] BACKEND INICIADO
+[2026-09-24T07:32:15-03:00] BACKEND INICIADO
+[2026-09-24T07:32:37-03:00] BACKEND INICIADO
+[2026-09-24T07:47:57-03:00] BACKEND INICIADO
+[2026-09-24T07:48:46-03:00] BACKEND INICIADO
+[2026-09-24T07:49:49-03:00] BACKEND INICIADO
+[2026-09-24T07:54:43-03:00] BACKEND INICIADO
+[2026-09-24T08:02:00-03:00] BACKEND INICIADO
+[2026-09-24T08:05:28-03:00] BACKEND INICIADO
+[2026-09-24T08:35:16-03:00] BACKEND INICIADO
+[2026-09-24T08:35:45-03:00] BACKEND INICIADO
+[2026-09-24T08:45:31-03:00] BACKEND INICIADO
+[2026-09-24T10:13:22-03:00] BACKEND INICIADO
+[2026-09-24T10:18:46-03:00] BACKEND INICIADO
+[2026-09-24T10:20:37-03:00] BACKEND INICIADO
+[2026-09-24T10:22:50-03:00] BACKEND INICIADO
+[2026-09-24T10:23:39-03:00] BACKEND INICIADO
+[2026-09-24T10:26:00-03:00] BACKEND INICIADO
+[2026-09-24T10:26:45-03:00] BACKEND INICIADO
+[2026-09-24T10:33:03-03:00] BACKEND INICIADO
+[2026-09-24T10:38:39-03:00] BACKEND INICIADO
+[2026-09-24T10:41:43-03:00] BACKEND INICIADO
+[2026-09-24T10:45:22-03:00] BACKEND INICIADO
+[2026-09-24T10:49:35-03:00] BACKEND INICIADO
+[2026-09-24T10:54:19-03:00] BACKEND INICIADO
+[2026-09-24T10:58:37-03:00] BACKEND INICIADO
+[2026-09-24T11:03:26-03:00] BACKEND INICIADO
+[2026-09-24T11:17:44-03:00] BACKEND INICIADO
+[2026-09-24T12:14:48-03:00] BACKEND INICIADO
+[2026-09-24T18:56:44-03:00] BACKEND INICIADO
+[2026-09-24T19:00:38-03:00] BACKEND INICIADO
+[2026-09-24T19:04:34-03:00] BACKEND INICIADO
+[2026-09-24T19:13:36-03:00] BACKEND INICIADO
+[2026-09-24T19:18:20-03:00] BACKEND INICIADO
+[2026-09-24T19:24:30-03:00] BACKEND INICIADO
+[2026-09-24T19:24:59-03:00] BACKEND INICIADO
+[2026-09-24T19:25:16-03:00] BACKEND INICIADO
+[2026-09-24T19:25:57-03:00] BACKEND INICIADO
+[2026-09-24T19:27:32-03:00] BACKEND INICIADO
+[2026-09-24T19:32:02-03:00] BACKEND INICIADO
+[2026-09-24T19:41:44-03:00] BACKEND INICIADO
+[2026-09-24T19:43:11-03:00] BACKEND INICIADO
+[2026-09-24T19:47:04-03:00] BACKEND INICIADO
+[2026-09-24T19:48:17-03:00] BACKEND INICIADO
+[2026-09-24T19:49:40-03:00] BACKEND INICIADO
+[2026-09-24T19:50:38-03:00] BACKEND INICIADO
+[2026-09-24T19:51:23-03:00] BACKEND INICIADO
+[2026-09-24T19:54:12-03:00] BACKEND INICIADO
+[2026-09-24T19:59:08-03:00] BACKEND INICIADO
+[2026-09-24T19:59:50-03:00] BACKEND INICIADO
+[2026-09-24T20:01:16-03:00] BACKEND INICIADO
+[2026-09-24T20:03:13-03:00] BACKEND INICIADO
+[2026-09-24T20:13:57-03:00] BACKEND INICIADO
+[2026-09-24T20:17:26-03:00] BACKEND INICIADO
+[2026-09-24T20:26:16-03:00] BACKEND INICIADO
+[2026-09-24T20:38:01-03:00] BACKEND INICIADO
+[2026-09-24T20:38:28-03:00] BACKEND INICIADO
+[2026-09-24T20:39:59-03:00] BACKEND INICIADO
+[2026-09-24T20:41:16-03:00] BACKEND INICIADO
+[2026-09-24T20:58:22-03:00] BACKEND INICIADO
+[2026-09-24T20:59:41-03:00] BACKEND INICIADO
+[2026-09-24T21:03:57-03:00] BACKEND INICIADO
+[2026-09-24T21:05:40-03:00] BACKEND INICIADO
+[2026-09-24T21:08:24-03:00] BACKEND INICIADO
+[2026-09-24T21:09:47-03:00] BACKEND INICIADO
+[2026-09-24T21:36:32-03:00] BACKEND INICIADO
+[2026-09-24T21:38:16-03:00] BACKEND INICIADO
+[2026-09-24T21:45:18-03:00] BACKEND INICIADO
+[2026-09-24T21:46:47-03:00] BACKEND INICIADO
+[2026-09-24T21:51:06-03:00] BACKEND INICIADO
+[2026-09-24T21:51:29-03:00] BACKEND INICIADO
+[2026-09-24T21:52:45-03:00] BACKEND INICIADO
+[2026-09-25T07:09:29-03:00] BACKEND INICIADO
+[2026-09-25T07:18:22-03:00] BACKEND INICIADO
+[2026-09-25T07:23:58-03:00] BACKEND INICIADO
+[2026-09-25T07:26:29-03:00] BACKEND INICIADO
+[2026-09-25T07:29:31-03:00] BACKEND INICIADO
+[2026-09-25T07:29:52-03:00] BACKEND INICIADO
+[2026-09-25T07:34:00-03:00] BACKEND INICIADO
+[2026-09-25T07:35:46-03:00] BACKEND INICIADO
+[2026-09-25T07:47:53-03:00] BACKEND INICIADO
+[2026-09-25T07:58:20-03:00] BACKEND INICIADO
+[2026-09-25T08:00:10-03:00] BACKEND INICIADO
+[2026-09-25T08:00:40-03:00] BACKEND INICIADO
+[2026-09-25T08:00:58-03:00] BACKEND INICIADO
+[2026-09-25T08:01:14-03:00] BACKEND INICIADO
+[2026-09-25T08:01:24-03:00] BACKEND INICIADO
+[2026-09-25T08:02:49-03:00] BACKEND INICIADO
+[2026-09-25T08:10:34-03:00] BACKEND INICIADO
+[2026-09-25T08:12:13-03:00] BACKEND INICIADO
+[2026-09-25T13:26:54-03:00] BACKEND INICIADO
+[2026-09-25T13:31:06-03:00] BACKEND INICIADO
+[2026-09-25T13:36:51-03:00] BACKEND INICIADO
+[2026-09-25T13:40:18-03:00] BACKEND INICIADO
+[2026-09-25T13:49:52-03:00] BACKEND INICIADO
+[2026-09-25T14:05:43-03:00] BACKEND INICIADO
+[2026-09-25T14:56:37-03:00] BACKEND INICIADO
+[2026-09-25T15:12:44-03:00] BACKEND INICIADO
+[2026-09-25T15:30:18-03:00] BACKEND INICIADO
+[2026-09-25T18:46:28-03:00] BACKEND INICIADO
+[2026-09-25T18:50:46-03:00] BACKEND INICIADO
+[2026-09-25T18:52:35-03:00] BACKEND INICIADO
+[2026-09-25T19:20:46-03:00] BACKEND INICIADO
+[2026-09-25T19:26:07-03:00] BACKEND INICIADO
+[2026-09-25T19:30:53-03:00] BACKEND INICIADO
+[2026-09-25T19:48:15-03:00] BACKEND INICIADO
+[2026-09-25T20:15:40-03:00] BACKEND INICIADO
+[2026-09-26T09:46:47-03:00] BACKEND INICIADO
+[2026-09-26T10:16:10-03:00] BACKEND INICIADO
+[2026-09-26T10:25:23-03:00] BACKEND INICIADO
+[2026-09-26T10:25:44-03:00] desvinculado 110591000012025OB000055 do processo 50020.002278/2025-18 (1 linha(s) do tg_execucao_join)
+[2026-09-26T10:54:50-03:00] BACKEND INICIADO
+[2026-09-26T10:55:14-03:00] desvinculado 110591000012025OB000055 do processo 50020.002278/2025-18 (1 linha(s) do tg_execucao_join)
+[2026-09-26T10:55:14-03:00] vinculado 110591000012025OB000055 ao processo 50020.002278/2025-18 (origem 50020.002278/2025-18, 1 linha(s))
+[2026-09-26T10:55:14-03:00] desvinculado 110591000012025OB000055 do processo 50020.002278/2025-18 (1 linha(s) do tg_execucao_join)
+[2026-09-26T10:55:14-03:00] vinculado 110591000012025OB000055 ao processo 50000.013045/2017-79 (origem 50020.002278/2025-18, 1 linha(s))
+[2026-09-26T10:55:43-03:00] desvinculado 110591000012025OB000055 do processo 50020.002278/2025-18 (1 linha(s) do tg_execucao_join)
+[2026-09-26T10:55:45-03:00] vinculado 110591000012025OB000055 ao processo 50020.002278/2025-18 (origem 50020.002278/2025-18, 1 linha(s))
+[2026-09-26T11:15:35-03:00] BACKEND INICIADO
+[2026-09-26T13:20:27-03:00] BACKEND INICIADO
+[2026-09-26T13:26:44-03:00] BACKEND INICIADO
+[2026-09-26T13:28:22-03:00] BACKEND INICIADO
+[2026-09-26T13:28:52-03:00] BACKEND INICIADO
+[2026-09-26T19:03:00-03:00] BACKEND INICIADO
+[2026-09-26T19:24:04-03:00] BACKEND INICIADO
+[2026-09-26T19:24:36-03:00] PI MINFRA006 desvinculado do processo 50000.042503/2019-49 (4 linha(s))
+[2026-09-26T19:24:41-03:00] PI MINFRA006 adicionado ao processo 50000.042503/2019-49: 4 linha(s) novas
+[2026-09-26T19:25:10-03:00] BACKEND INICIADO
+[2026-09-26T19:32:07-03:00] BACKEND INICIADO
+[2026-09-26T19:32:11-03:00] PI MINFRA006 desvinculado do processo 50000.042503/2019-49 (3 linha(s); 1 NE(s) mantidas por divergência)
+[2026-09-26T19:32:26-03:00] PI MINFRA006 adicionado ao processo 50000.042503/2019-49: 3 linha(s) novas
+[2026-09-27T17:29:09-03:00] BACKEND INICIADO
+[2026-09-27T18:03:27-03:00] BACKEND INICIADO
+[2026-09-27T18:03:53-03:00] BACKEND INICIADO
+[2026-09-28T09:24:01-03:00] BACKEND INICIADO
+[2026-09-28T09:24:18-03:00] BACKEND INICIADO
+[2026-09-28T14:38:32-03:00] BACKEND INICIADO
+[2026-09-28T15:05:07-03:00] BACKEND INICIADO
+[2026-09-30T19:27:08-03:00] BACKEND INICIADO
+[2026-09-30T19:58:20-03:00] BACKEND INICIADO
+[2026-09-30T21:03:03-03:00] BACKEND INICIADO
+[2026-09-30T21:08:40-03:00] BACKEND INICIADO
+[2026-09-30T21:14:55-03:00] BACKEND INICIADO
+[2026-09-30T21:21:15-03:00] BACKEND INICIADO
+[2026-09-30T21:26:27-03:00] BACKEND INICIADO
+[2026-09-30T21:31:10-03:00] BACKEND INICIADO
+[2026-09-30T21:32:15-03:00] BACKEND INICIADO
+[2026-09-30T21:35:38-03:00] BACKEND INICIADO
+[2026-10-01T17:17:20-03:00] BACKEND INICIADO
+[2026-10-01T17:36:04-03:00] ERRO | OperationalError: no such table: arquivos_pdf
+[2026-10-01T17:36:04-03:00] ERRO | OperationalError: no such table: arquivos_pdf
+[2026-10-01T17:36:04-03:00] BACKEND INICIADO
+[2026-10-01T17:36:19-03:00] BACKEND INICIADO
+[2026-10-01T17:45:28-03:00] BACKEND INICIADO
+[2026-10-01T17:46:41-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:46:49-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:46:50-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:46:51-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:46:52-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:46:55-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:46:56-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:47:00-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:47:02-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:47:03-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:47:04-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:47:11-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:47:14-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:47:18-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:47:21-03:00] ERRO | OperationalError: no such column: data_documento
+[2026-10-01T17:49:01-03:00] REBUILD | concluído (teste)
+[2026-10-01T18:12:49-03:00] BACKEND INICIADO
+[2026-10-01T18:14:42-03:00] BACKEND INICIADO
+[2026-10-01T18:17:43-03:00] BACKEND INICIADO
+[2026-10-01T18:26:07-03:00] BACKEND INICIADO
+[2026-10-01T18:27:45-03:00] BACKEND INICIADO
+[2026-10-01T18:30:56-03:00] BACKEND INICIADO
+[2026-10-01T18:35:55-03:00] BACKEND INICIADO
+[2026-10-01T18:42:33-03:00] BACKEND INICIADO
+[2026-10-01T18:51:28-03:00] BACKEND INICIADO
+[2026-10-01T18:54:03-03:00] BACKEND INICIADO
+[2026-10-01T18:55:08-03:00] BACKEND INICIADO
+[2026-10-01T18:58:01-03:00] BACKEND INICIADO
+[2026-10-01T18:59:01-03:00] BACKEND INICIADO
+[2026-10-01T19:00:30-03:00] BACKEND INICIADO
+[2026-10-01T19:18:41-03:00] BACKEND INICIADO
+[2026-10-01T19:43:24-03:00] BACKEND INICIADO
+[2026-10-01T19:52:07-03:00] BACKEND INICIADO
+[2026-10-01T20:01:36-03:00] BACKEND INICIADO
+[2026-10-01T20:13:14-03:00] BACKEND INICIADO
+[2026-10-01T20:14:33-03:00] BACKEND INICIADO
+[2026-10-01T20:19:07-03:00] BACKEND INICIADO
+[2026-10-01T20:37:43-03:00] BACKEND INICIADO
+[2026-10-01T22:23:49-03:00] BACKEND INICIADO
+[2026-10-01T22:45:27-03:00] BACKEND INICIADO
+[2026-10-01T22:50:15-03:00] BACKEND INICIADO
+[2026-10-02T09:59:32-03:00] BACKEND INICIADO
+[2026-10-02T10:08:37-03:00] desvinculado 110591000012019NE000063 do processo 50000.025977/2017-64 (1 linha(s) do tg_execucao_join)
+[2026-10-02T10:08:37-03:00] vinculado 110591000012019NE000063 ao processo 50000.008578/2017-39 (origem 50000.025977/2017-64, 1 linha(s))
+[2026-10-02T10:08:37-03:00] desvinculado 110591000012026NC000143 do processo 50000.037260/2020-61 (1 linha(s) do tg_execucao_join)
+[2026-10-02T10:08:37-03:00] vinculado 110591000012026NC000143 ao processo 50020.006853/2025-51 (origem 50000.037260/2020-61, 1 linha(s))
+[2026-10-02T10:08:37-03:00] desvinculado 110591000012026NC000144 do processo 50000.037260/2020-61 (1 linha(s) do tg_execucao_join)
+[2026-10-02T10:08:37-03:00] vinculado 110591000012026NC000144 ao processo 50020.006853/2025-51 (origem 50000.037260/2020-61, 1 linha(s))
+[2026-10-02T10:08:37-03:00] desvinculado 110591000012026NC000145 do processo 50000.037260/2020-61 (1 linha(s) do tg_execucao_join)
+[2026-10-02T10:08:37-03:00] vinculado 110591000012026NC000145 ao processo 50020.006853/2025-51 (origem 50000.037260/2020-61, 1 linha(s))
+[2026-10-02T10:08:37-03:00] desvinculado 110591000012026NC000146 do processo 50000.037260/2020-61 (1 linha(s) do tg_execucao_join)
+[2026-10-02T10:08:37-03:00] vinculado 110591000012026NC000146 ao processo 50020.006853/2025-51 (origem 50000.037260/2020-61, 1 linha(s))
+[2026-10-02T10:08:37-03:00] desvinculado 110591000012026NC000147 do processo 50000.037260/2020-61 (1 linha(s) do tg_execucao_join)
+[2026-10-02T10:08:37-03:00] vinculado 110591000012026NC000147 ao processo 50020.006853/2025-51 (origem 50000.037260/2020-61, 1 linha(s))
+[2026-10-02T10:08:37-03:00] desvinculado 110591000012026NC000148 do processo 50000.037260/2020-61 (1 linha(s) do tg_execucao_join)
+[2026-10-02T10:08:37-03:00] vinculado 110591000012026NC000148 ao processo 50020.006853/2025-51 (origem 50000.037260/2020-61, 1 linha(s))
+[2026-10-02T10:08:37-03:00] desvinculado 110591000012026NC000149 do processo 50000.037260/2020-61 (1 linha(s) do tg_execucao_join)
+[2026-10-02T10:08:37-03:00] vinculado 110591000012026NC000149 ao processo 50020.006853/2025-51 (origem 50000.037260/2020-61, 1 linha(s))
+[2026-10-02T10:08:37-03:00] desvinculado 110591000012026NC000150 do processo 50000.037260/2020-61 (1 linha(s) do tg_execucao_join)
+[2026-10-02T10:08:37-03:00] vinculado 110591000012026NC000150 ao processo 50020.006853/2025-51 (origem 50000.037260/2020-61, 1 linha(s))
+[2026-10-02T10:08:37-03:00] desvinculado 110591000012026NC000151 do processo 50000.037260/2020-61 (1 linha(s) do tg_execucao_join)
+[2026-10-02T10:08:37-03:00] vinculado 110591000012026NC000151 ao processo 50020.006853/2025-51 (origem 50000.037260/2020-61, 1 linha(s))
+[2026-10-02T10:08:37-03:00] desvinculado 110591000012026NC000152 do processo 50000.037260/2020-61 (1 linha(s) do tg_execucao_join)
+[2026-10-02T10:08:37-03:00] vinculado 110591000012026NC000152 ao processo 50020.006853/2025-51 (origem 50000.037260/2020-61, 1 linha(s))
+[2026-10-02T10:08:57-03:00] BACKEND INICIADO
+[2026-10-02T10:40:29-03:00] BACKEND INICIADO
+[2026-10-02T11:14:14-03:00] BACKEND INICIADO
+[2026-10-02T11:19:38-03:00] BACKEND INICIADO
+[2026-10-02T11:24:46-03:00] BACKEND INICIADO
+[2026-10-02T11:30:10-03:00] BACKEND INICIADO
+[2026-10-02T11:32:52-03:00] BACKEND INICIADO
+[2026-10-02T11:49:01-03:00] BACKEND INICIADO
+[2026-10-02T11:49:54-03:00] BACKEND INICIADO
+[2026-10-02T11:55:24-03:00] BACKEND INICIADO
+[2026-10-02T12:02:25-03:00] BACKEND INICIADO
+[2026-10-02T12:12:29-03:00] BACKEND INICIADO
+[2026-10-02T14:58:51-03:00] BACKEND INICIADO
+[2026-10-02T15:21:58-03:00] BACKEND INICIADO
+[2026-10-02T15:30:50-03:00] BACKEND INICIADO
+[2026-10-02T15:40:45-03:00] BACKEND INICIADO
+[2026-10-02T16:07:09-03:00] BACKEND INICIADO
+[2026-10-02T17:09:30-03:00] BACKEND INICIADO
+[2026-10-02T17:13:31-03:00] BACKEND INICIADO
+[2026-10-02T19:57:55-03:00] BACKEND INICIADO
+[2026-10-02T19:57:56-03:00] SEI.db | documento 8921203 adicionado a SEM-PROCESSO/FRAPORT ('Ofício nº 157/2024/SRA-ANAC — 1ª parcela (validação parcial)', 3 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T19:57:57-03:00] SEI.db | documento 8921208 adicionado a SEM-PROCESSO/FRAPORT ('Nota Técnica nº 12/2024/SRA-ANAC — 1ª parcela', 7 pág., 1 foto(s), 1 nova(s))
+[2026-10-02T19:57:57-03:00] SEI.db | documento 8923257 adicionado a SEM-PROCESSO/FRAPORT ('Medida Provisória nº 1.260/2024 — crédito extraordinário', 3 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T19:57:57-03:00] SEI.db | documento 8923403 adicionado a SEM-PROCESSO/FRAPORT ('Nota de Empenho 2024NE000025 — Fraport R$ 425.968.000,00', 2 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T19:57:57-03:00] SEI.db | documento 8922943 adicionado a SEM-PROCESSO/FRAPORT ('Despacho nº 130/2024/CGGAI — autorização 1ª parcela', 2 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T19:57:57-03:00] SEI.db | documento 8934317 adicionado a SEM-PROCESSO/FRAPORT ('Ofício nº 658/2024/SAC-MPOR ao TCU — pagamento à Fraport', 1 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T19:57:57-03:00] SEI.db | documento 8988404 adicionado a SEM-PROCESSO/FRAPORT ('Nota Técnica nº 13/2024/SRA-ANAC — 2ª parcela', 7 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T19:57:57-03:00] SEI.db | documento 9029507 adicionado a SEM-PROCESSO/FRAPORT ('Nota Técnica nº 14/2024/SRA-ANAC — 3ª parcela', 5 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T19:57:57-03:00] SEI.db | documento 9056872 adicionado a SEM-PROCESSO/FRAPORT ('Nota Técnica nº 15/2024/SRA-ANAC — 4ª parcela', 6 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T19:57:57-03:00] SEI.db | documento 9114472 adicionado a SEM-PROCESSO/FRAPORT ('Nota Técnica nº 18/2024/SRA-ANAC — 5ª parcela', 6 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T19:57:57-03:00] SEI.db | documento 9208641 adicionado a SEM-PROCESSO/FRAPORT ('Nota Técnica nº 24/2024/SRA-ANAC — 6ª parcela', 7 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T19:57:57-03:00] SEI.db | documento 9212115 adicionado a SEM-PROCESSO/FRAPORT ('Nota Técnica nº 27/2024/SRA-ANAC — 7ª parcela e retomada total 16/12/2024', 7 pág., 1 foto(s), 1 nova(s))
+[2026-10-02T19:57:57-03:00] SEI.db | documento 9374071 adicionado a SEM-PROCESSO/FRAPORT ('Nota Técnica nº 2/2025/SRA-ANAC — 8ª parcela', 5 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T19:58:06-03:00] SEI.db | documento 10498440 adicionado a SEM-PROCESSO/FRAPORT ('Lei nº 15.105/2025 — conversão da MP 1.260/2024', 4 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T19:58:09-03:00] SEI.db | cache_pdf gravado para 8988404 (7 pág., OCR 0)
+[2026-10-02T19:58:09-03:00] SEI.db | cache_pdf gravado para 9114472 (6 pág., OCR 0)
+[2026-10-02T19:58:09-03:00] SEI.db | cache_pdf gravado para 9374071 (5 pág., OCR 0)
+[2026-10-02T19:58:09-03:00] SEI.db | cache_pdf gravado para 9056872 (6 pág., OCR 0)
+[2026-10-02T19:58:09-03:00] SEI.db | cache_pdf gravado para 10498440 (4 pág., OCR 0)
+[2026-10-02T19:58:09-03:00] SEI.db | cache_pdf gravado para 8923257 (3 pág., OCR 3)
+[2026-10-02T19:58:09-03:00] SEI.db | cache_pdf gravado para 9212115 (7 pág., OCR 0)
+[2026-10-02T19:58:10-03:00] SEI.db | cache_pdf gravado para 9029507 (5 pág., OCR 0)
+[2026-10-02T19:58:10-03:00] SEI.db | cache_pdf gravado para 9208641 (7 pág., OCR 0)
+[2026-10-02T19:58:10-03:00] SEI.db | cache_pdf gravado para 8922943 (2 pág., OCR 0)
+[2026-10-02T19:58:10-03:00] SEI.db | cache_pdf gravado para 8934317 (1 pág., OCR 0)
+[2026-10-02T19:58:12-03:00] SEI.db | 8921203: campos vazios preenchidos — CNPJ da executora: 27.059.460/0001-41 (doc. 8921203)
+[2026-10-02T19:58:12-03:00] SEI.db | cache_pdf gravado para 8921203 (3 pág., OCR 3)
+[2026-10-02T19:58:12-03:00] SEI.db | 8923403: campos vazios preenchidos — CNPJ da executora: 27.059.460/0001-41 (doc. 8923403)
+[2026-10-02T19:58:12-03:00] SEI.db | cache_pdf gravado para 8923403 (2 pág., OCR 0)
+[2026-10-02T19:58:20-03:00] SEI.db | cache_pdf gravado para 8921208 (7 pág., OCR 7)
+[2026-10-02T19:59:20-03:00] BACKEND INICIADO
+[2026-10-02T20:01:11-03:00] REBUILD | concluído (processo relacionado 50020.007382/2024-18 -> SEM-PROCESSO/FRAPORT)
+[2026-10-02T20:15:29-03:00] BACKEND INICIADO
+[2026-10-02T20:20:46-03:00] BACKEND INICIADO
+[2026-10-02T20:21:37-03:00] BACKEND INICIADO
+[2026-10-02T20:23:07-03:00] REBUILD | concluído (processo informado 50020.007382/2024-18 -> SEM-PROCESSO/FRAPORT)
+[2026-10-02T20:42:41-03:00] BACKEND INICIADO
+[2026-10-02T20:42:42-03:00] SEI.db | documento 0382499 adicionado a SEM-PROCESSO/APORTE-INFRAERO-ARACAJU ('Pedido SISPAC — Aeroporto de Aracaju, ampliação da pista de pouso (SAC.00058), R$ 3.109.194,00', 1 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T20:42:42-03:00] SEI.db | documento 0385943 adicionado a SEM-PROCESSO/APORTE-INFRAERO-ARACAJU ('Nota de Empenho — aporte INFRAERO 2017 (SAC.00058 Aeroporto de Aracaju)', 9 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T20:42:43-03:00] SEI.db | documento 1267401 adicionado a SEM-PROCESSO/APORTE-INFRAERO-ARACAJU ('Pedido SISPAC — Aeroporto de Aracaju, adequação do terminal de passageiros (SAC.00051)', 6 pág., 12 foto(s), 12 nova(s))
+[2026-10-02T20:42:43-03:00] SEI.db | documento 1299859 adicionado a SEM-PROCESSO/APORTE-INFRAERO-ARACAJU ('Despacho nº 240 — empenhos 2018 do aporte INFRAERO (2018NE000251 Aracaju SAC00051)', 2 pág., 0 foto(s), 0 nova(s))
+[2026-10-02T20:42:43-03:00] SEI.db | cache_pdf gravado para 0382499 (1 pág., OCR 0)
+[2026-10-02T20:42:43-03:00] SEI.db | cache_pdf gravado para 0385943 (9 pág., OCR 0)
+[2026-10-02T20:42:43-03:00] SEI.db | cache_pdf gravado para 1299859 (2 pág., OCR 0)
+[2026-10-02T20:42:51-03:00] SEI.db | cache_pdf gravado para 1267401 (6 pág., OCR 6)
+[2026-10-02T21:00:13-03:00] BACKEND INICIADO
+[2026-10-02T22:39:04-03:00] BACKEND INICIADO
+[2026-10-02T22:42:51-03:00] BACKEND INICIADO
+[2026-10-02T22:43:07-03:00] BACKEND INICIADO
+[2026-10-02T22:45:35-03:00] BACKEND INICIADO
+[2026-10-03T06:28:08-03:00] BACKEND INICIADO
+[2026-10-03T06:38:42-03:00] BACKEND INICIADO
+[2026-10-03T06:38:57-03:00] BACKEND INICIADO
+[2026-10-03T06:53:57-03:00] BACKEND INICIADO
+[2026-10-03T07:03:16-03:00] BACKEND INICIADO
+[2026-10-03T07:05:38-03:00] BACKEND INICIADO
+[2026-10-03T07:13:42-03:00] BACKEND INICIADO
+[2026-10-03T07:21:55-03:00] BACKEND INICIADO
+[2026-10-03T08:27:48-03:00] TG | tg_execucao_join atualizada: 16001 linhas, cobertura 119/125, 1 aviso(s)
+[2026-10-03T08:33:01-03:00] BACKEND INICIADO
+[2026-10-03T08:33:21-03:00] TG-DRIVE | 2 arquivo(s) novo(s)/alterado(s) baixado(s) do Drive; base do TG reconstruída (1 linhas). radar_ne.csv, Planilha.xlsx
+[2026-10-03T08:33:21-03:00] TG-DRIVE | Nenhum arquivo novo no Drive. 
+[2026-10-03T08:33:21-03:00] TG-DRIVE | 1 arquivo(s) novo(s)/alterado(s) baixado(s) do Drive; base do TG reconstruída (1 linhas). radar_ne.csv
+[2026-10-03T08:33:36-03:00] TG-DRIVE | Falta o arquivo de credencial do Google (ID do cliente OAuth — App para computador).
+[2026-10-03T08:35:10-03:00] TG-DRIVE | Falta o arquivo de credencial do Google (ID do cliente OAuth — App para computador).
+[2026-10-03T08:43:35-03:00] TG-DRIVE | Falta o arquivo de credencial do Google (ID do cliente OAuth — App para computador).
+[2026-10-03T08:44:21-03:00] TG-DRIVE | credencial OAuth gravada em ~/.radar_fnac
+[2026-10-03T08:49:29-03:00] ERRO | TG-DRIVE: Timed out waiting for response from authorization server
+[2026-10-03T08:50:13-03:00] BACKEND INICIADO
+[2026-10-03T08:51:20-03:00] TG-DRIVE | 19 arquivo(s) novo(s)/alterado(s) baixado(s) do Drive; base do TG reconstruída (16170 linhas). radar_nc.csv, radar_ne.csv, radar_ob.csv, radar_docs.csv, sac_bi.csv, db_bi_tesgerencial.csv, radar_docs_geral_legado.csv, radar_pf_2023_jun_a_dez.xlsx, radar_ne_historico_saldo.csv, radar_ne_historico_saldo.csv, radar_ne_historico_saldo.csv, radar_ne_historico_detalhado.csv, radar_ne_historico_detalhado.csv, radar_ne_historico_saldo.csv, radar_ne_historico_detalhado.csv, radar_docs_geral.xlsx, nc_unificado.xlsx, radar_docs_geral.xlsx, radar_pf_2025.xlsx
+[2026-10-03T09:09:33-03:00] BACKEND INICIADO
+[2026-10-03T09:09:36-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T09:09:57-03:00] TG-DRIVE | Nenhum arquivo novo no Drive; base do TG reconstruída (16170 linhas). 
+[2026-10-03T09:18:00-03:00] BATIMENTO | 0 na base · 0 novo(s): 0 vinculado(s), 0 por PI aprendido, 0 pendente(s); 2 pendência(s) resolvida(s)
+[2026-10-03T09:18:00-03:00] BATIMENTO | 110591000012026NC000208: PI SISBRAIP vinculado(a) a 50020.002645/2026-64 pelo usuário -> ('vinculado', '50020.002645/2026-64')
+[2026-10-03T09:18:19-03:00] BATIMENTO | 6806 na base · 0 novo(s): 0 vinculado(s), 0 por PI aprendido, 0 pendente(s); 0 pendência(s) resolvida(s)
+[2026-10-03T09:18:20-03:00] BACKEND INICIADO
+[2026-10-03T09:18:23-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T09:18:43-03:00] BATIMENTO | 0 na base · 0 novo(s): 0 vinculado(s), 0 por PI aprendido, 0 pendente(s); 0 pendência(s) resolvida(s)
+[2026-10-03T09:18:43-03:00] TG-DRIVE | Nenhum arquivo novo no Drive; base do TG reconstruída (16170 linhas); batimento: 0 entrada(s) nova(s) — 0 vinculada(s), 0 pendente(s). 
+[2026-10-03T10:31:33-03:00] BATIMENTO | 0 na base · 0 novo(s): 0 vinculado(s), 0 por PI aprendido, 0 pendente(s); 0 pendência(s) resolvida(s)
+[2026-10-03T10:31:33-03:00] TG-DRIVE | 1 arquivo(s) novo(s)/alterado(s) baixado(s) do Drive; base do TG reconstruída (16171 linhas); batimento: 0 entrada(s) nova(s) — 0 vinculada(s), 0 pendente(s). db_bi_tesgerencial.csv
+[2026-10-03T10:31:59-03:00] TED | atualização concluída: {'novos': 0, 'alterados': 0, 'removidos': 0}
+[2026-10-03T10:40:10-03:00] TC | atualização concluída: {'novos': 4133, 'alterados': 6, 'removidos': 0}
+[2026-10-03T11:25:09-03:00] BACKEND INICIADO
+[2026-10-03T11:25:12-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T11:25:17-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T11:27:55-03:00] BACKEND INICIADO
+[2026-10-03T11:27:59-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T11:28:04-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T11:29:58-03:00] BACKEND INICIADO
+[2026-10-03T11:30:01-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T11:30:06-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T11:31:41-03:00] CHECKLIST | modelo alterado: 18 item(ns), 2 alterado(s)/excluído(s), 2 marcação(ões) desfeita(s)
+[2026-10-03T11:38:56-03:00] BACKEND INICIADO
+[2026-10-03T11:38:59-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T11:39:04-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T11:52:09-03:00] CHECKLIST | modelo alterado: 22 item(ns), 3 alterado(s)/excluído(s), 0 marcação(ões) desfeita(s)
+[2026-10-03T11:53:33-03:00] CHECKLIST | modelo alterado: 22 item(ns), 1 alterado(s)/excluído(s), 0 marcação(ões) desfeita(s)
+[2026-10-03T12:23:42-03:00] ERRO | OperationalError: table instrumentos_suspensiva has 9 columns but 7 values were supplied
+[2026-10-03T12:24:09-03:00] ERRO | OperationalError: table instrumentos_suspensiva has 9 columns but 7 values were supplied
+[2026-10-03T12:26:00-03:00] BACKEND INICIADO
+[2026-10-03T12:26:03-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T12:26:08-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T12:33:02-03:00] BACKEND INICIADO
+[2026-10-03T12:33:05-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T12:33:10-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T12:48:05-03:00] BACKEND INICIADO
+[2026-10-03T12:48:08-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T12:48:13-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T12:48:31-03:00] SITUAÇÃO | histórico limpo: 00055.001098/2016-52 (2 registro(s))
+[2026-10-03T14:07:21-03:00] BACKEND INICIADO
+[2026-10-03T14:07:24-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T14:07:29-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T17:56:12-03:00] BACKEND INICIADO
+[2026-10-03T17:56:15-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T17:56:20-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T18:11:24-03:00] BACKEND INICIADO
+[2026-10-03T18:11:27-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T18:11:32-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T18:12:27-03:00] BACKEND INICIADO
+[2026-10-03T18:12:30-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T18:12:35-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T18:12:37-03:00] Novo instrumento em branco criado: CARTAO-NOVO-20261003181237
+[2026-10-03T18:12:40-03:00] Novo instrumento em branco descartado: CARTAO-NOVO-20261003181237
+[2026-10-03T18:13:39-03:00] BACKEND INICIADO
+[2026-10-03T18:13:42-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T18:13:46-03:00] Novo instrumento em branco criado: CARTAO-NOVO-20261003181346
+[2026-10-03T18:13:47-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T18:15:07-03:00] Novo instrumento em branco criado: CARTAO-NOVO-20261003181507
+[2026-10-03T18:15:18-03:00] Novo instrumento em branco descartado: CARTAO-NOVO-20261003181507
+[2026-10-03T18:16:37-03:00] Novo instrumento em branco criado: CARTAO-NOVO-20261003181637
+[2026-10-03T18:16:41-03:00] Novo instrumento em branco descartado: CARTAO-NOVO-20261003181637
+[2026-10-03T18:16:41-03:00] Novo instrumento em branco criado: CARTAO-NOVO-20261003181641
+[2026-10-03T18:16:48-03:00] Novo instrumento em branco descartado: CARTAO-NOVO-20261003181641
+[2026-10-03T18:16:54-03:00] Novo instrumento em branco criado: CARTAO-NOVO-20261003181654
+[2026-10-03T18:16:57-03:00] Novo instrumento em branco descartado: CARTAO-NOVO-20261003181654
+[2026-10-03T18:19:27-03:00] Novo instrumento em branco criado: CARTAO-NOVO-20261003181927
+[2026-10-03T18:22:35-03:00] BACKEND INICIADO
+[2026-10-03T18:22:38-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T18:22:43-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T18:45:54-03:00] BACKEND INICIADO
+[2026-10-03T18:45:55-03:00] BNDES selic: BCB indisponível (<urlopen error [Errno 8] nodename nor servname provided, or not known>)
+[2026-10-03T18:45:57-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-03T18:46:02-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-03T18:46:13-03:00] BNDES selic: BCB indisponível (<urlopen error [Errno 8] nodename nor servname provided, or not known>)
+[2026-10-03T18:46:17-03:00] BNDES selic: BCB indisponível (<urlopen error [Errno 8] nodename nor servname provided, or not known>)
+[2026-10-03T19:32:25-03:00] BNDES selic: BCB indisponível (<urlopen error [Errno 8] nodename nor servname provided, or not known>)
+[2026-10-03T19:37:07-03:00] BNDES selic: BCB indisponível (<urlopen error [Errno 8] nodename nor servname provided, or not known>)
+[2026-10-03T19:38:21-03:00] BNDES selic: BCB indisponível (<urlopen error [Errno 8] nodename nor servname provided, or not known>)
+[2026-10-03T19:39:23-03:00] BNDES selic: BCB indisponível (<urlopen error [Errno 8] nodename nor servname provided, or not known>)
+[2026-10-04T08:47:59-03:00] BACKEND INICIADO
+[2026-10-04T08:48:03-03:00] TG-DRIVE | Nenhum arquivo novo no Drive. 
+[2026-10-04T08:48:23-03:00] TED | atualização concluída: {'novos': 0, 'alterados': 0, 'removidos': 0}
+[2026-10-04T08:54:29-03:00] API-GOV | suspensivas do Transferegov: {'criados': 0, 'atualizados': 0}
+[2026-10-04T08:54:29-03:00] TC | atualização concluída: {'novos': 44, 'alterados': 0, 'removidos': 0}
+[2026-10-04T08:54:29-03:00] API-GOV | coleta diária automática concluída (TED e TC)
+[2026-10-04T09:50:02-03:00] BACKEND INICIADO
+[2026-10-04T09:50:05-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-04T09:50:10-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-04T09:50:20-03:00] BACKEND INICIADO
+[2026-10-04T09:50:23-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-04T09:50:28-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-04T09:55:13-03:00] BACKEND INICIADO
+[2026-10-04T09:55:16-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-04T09:55:21-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-04T10:10:27-03:00] ERRO | LookupError: Instrumento  não encontrado.
+[2026-10-04T10:10:27-03:00] ERRO | FileNotFoundError: TED  não encontrado na base local.
+[2026-10-04T10:10:38-03:00] ERRO | LookupError: Instrumento  não encontrado.
+[2026-10-04T10:10:38-03:00] ERRO | FileNotFoundError: TED  não encontrado na base local.
+[2026-10-04T10:30:55-03:00] BACKEND INICIADO
+[2026-10-04T10:30:58-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-04T10:31:03-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-04T10:41:16-03:00] BACKEND INICIADO
+[2026-10-04T10:41:19-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-04T10:41:24-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-04T10:48:44-03:00] BACKEND INICIADO
+[2026-10-04T10:48:47-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-04T10:48:52-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-04T11:01:11-03:00] BACKEND INICIADO
+[2026-10-04T11:01:14-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-04T11:01:19-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-04T11:14:04-03:00] BACKEND INICIADO
+[2026-10-04T11:14:07-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-04T11:14:12-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-04T11:14:40-03:00] BACKEND INICIADO
+[2026-10-04T11:14:43-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-04T11:14:48-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-04T11:42:26-03:00] BACKEND INICIADO
+[2026-10-04T11:42:29-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-04T11:42:34-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-07T07:21:20-03:00] BACKEND INICIADO
+[2026-10-07T07:21:44-03:00] TED | atualização concluída: {'novos': 0, 'alterados': 0, 'removidos': 0}
+[2026-10-07T07:21:56-03:00] BATIMENTO | 0 na base · 5 novo(s): 1 vinculado(s), 0 por PI aprendido, 4 pendente(s); 0 pendência(s) resolvida(s)
+[2026-10-07T07:21:56-03:00] TG-DRIVE | 6 arquivo(s) novo(s)/alterado(s) baixado(s) do Drive; base do TG reconstruída (16224 linhas); batimento: 5 entrada(s) nova(s) — 1 vinculada(s), 4 pendente(s). db_bi_tesgerencial.csv, radar_nc.csv, radar_ne.csv, sac_bi.csv, radar_ob.csv, radar_docs.csv
+[2026-10-07T07:26:23-03:00] API-GOV | suspensivas do Transferegov: {'criados': 1, 'atualizados': 0}
+[2026-10-07T07:26:23-03:00] TC | atualização concluída: {'novos': 0, 'alterados': 3, 'removidos': 4116}
+[2026-10-07T07:26:23-03:00] API-GOV | coleta diária automática concluída (TED e TC)
+[2026-10-07T10:29:43-03:00] BACKEND INICIADO
+[2026-10-07T10:29:46-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-07T10:29:51-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-07T10:30:20-03:00] BACKEND INICIADO
+[2026-10-07T10:30:23-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-07T10:30:28-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo
+[2026-10-07T10:43:33-03:00] BACKEND INICIADO
+[2026-10-07T10:43:36-03:00] TG-DRIVE | ao abrir: já sincronizado hoje — não baixa de novo
+[2026-10-07T10:43:41-03:00] API-GOV | ao abrir: já coletado hoje — não coleta de novo

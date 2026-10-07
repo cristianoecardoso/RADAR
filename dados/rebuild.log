@@ -1,0 +1,64 @@
+semente (Instrumentos.db anterior): 5576 células; cadastro 99 linhas; vínculos 39
+documentos: 357
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+MuPDF error: unsupported error: cannot create appearance stream for  annotations
+
+cronogramas dos PTs: 107 documentos lidos; execução validada em 104; desembolso validado em 84
+contrapartida: 55 de 91 instrumentos com valor; 32 com contrapartida > 0; 3 com fontes conflitantes
+
+== fonte_campo: 8218 linhas ==
+  documentos: 3233 campos com fonte; preenchidos SEM fonte: 0
+  instrumentos: 2114 campos com fonte; preenchidos SEM fonte: 0
+  instrumentos_externos: 1444 campos com fonte; preenchidos SEM fonte: 0
+  externos_aditivos_transferegov: 585 campos com fonte; preenchidos SEM fonte: 0
+  instrumentos_transferegov: 842 campos com fonte; preenchidos SEM fonte: 0
+relatórios de cumprimento do objeto: 8
+portarias de gestão: 4 (54 designações)
+telas SIAFI (CONTRANSF): 4 documento(s), 96 PF, 89 NC
+decisões do usuário: 264 registradas em decisoes_usuario; livro_financeiro: 2755 lançamentos
+
+== Verificação ==
+células xlsx: 5576 no banco (esperado 5576; inclui vazias em amarelo: 297 células amarelas)
+linhas Cadastro: 99 | PF_PROCESSO: 681 por classe: {'DEFINIDA': 560, 'DOCUMENTADA': 29, 'INDEFINIDA': 92}
+documentos: 357 | páginas: 3807 | PDFs guardados: 357 | células de anexos Excel: 1157
+docs do Cadastro fora do banco: []
+  tipo_documento       preenchido em 357/357
+  numero_instrumento   preenchido em 297/357
+  data_assinatura      preenchido em 297/357
+  vigencia_documento   preenchido em 126/357
+  objeto               preenchido em 176/357
+  valor_total          preenchido em 176/357
+  processo_sei         preenchido em 356/357
+instrumentos: 93 | subdivisões: 99
+integridade: ok
+
+Instrumentos.db atualizado.
